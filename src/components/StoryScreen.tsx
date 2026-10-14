@@ -20,6 +20,7 @@ interface StoryScreenProps {
   waveformUrl: string | null
   clockRef: RefObject<PlaybackClock>
   onChoose: (to: string) => void
+  onBack: () => void
   onRestart: () => void
   onTogglePause: () => void
   onReplay: () => void
@@ -44,6 +45,8 @@ export function StoryScreen(props: StoryScreenProps) {
         status={props.status}
         trackUrl={props.trackUrl}
         choicesRevealed={choicesRevealed}
+        canGoBack={path.length > 0}
+        onBack={props.onBack}
         onTogglePause={props.onTogglePause}
         onReplay={props.onReplay}
         onSkip={props.onSkip}

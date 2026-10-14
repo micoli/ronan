@@ -32,6 +32,16 @@ describe('sessionReducer', () => {
     expect(sessionReducer(initialSession, { type: 'choose', to: 'b' })).toBe(initialSession)
   })
 
+  it('goes back to the previous node and drops it from the path', () => {
+    const moved = sessionReducer(sessionReducer(initialSession, { type: 'start', startId: 'a' }), { type: 'choose', to: 'b' })
+    expect(sessionReducer(moved, { type: 'back' })).toEqual({ currentNodeId: 'a', path: [], choicesRevealed: false })
+  })
+
+  it('ignores back on the first node', () => {
+    const started = sessionReducer(initialSession, { type: 'start', startId: 'a' })
+    expect(sessionReducer(started, { type: 'back' })).toBe(started)
+  })
+
   it('restarts to the initial state', () => {
     const moved = sessionReducer(sessionReducer(initialSession, { type: 'start', startId: 'a' }), { type: 'choose', to: 'b' })
     expect(sessionReducer(moved, { type: 'restart' })).toEqual(initialSession)

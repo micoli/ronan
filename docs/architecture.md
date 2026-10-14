@@ -18,7 +18,7 @@ StoryScreen ──▶ Scene (3D)  ou  ChoiceList (2D)
 ## Modules
 
 - **`story/`** : `types.ts` (Story, StoryNode, Choice), `parseStory.ts` (validation, erreurs listées), `loadStory.ts` (fetch + `VITE_STORY_URL`), `useStoryLoader.ts`.
-- **`session/`** : `session.ts` est un reducer pur (`start`, `resume`, `choose`, `reveal`, `restart`) testé unitairement. `savedSessionStorage.ts` lit/écrit `ronan:session` (sauvegarde invalide ignorée). `useSession.ts` branche le tout.
+- **`session/`** : `session.ts` est un reducer pur (`start`, `resume`, `choose`, `back`, `reveal`, `restart`) testé unitairement. `savedSessionStorage.ts` lit/écrit `ronan:session` (sauvegarde invalide ignorée). `useSession.ts` branche le tout.
 - **`player/`** : `soundcloudWidget.ts` charge l'API du widget et décrit ses types ; `useSoundCloudPlayer.ts` expose `status`, `playTrack`, `togglePause`, `replay` et une horloge `clockRef` (position extrapolée entre les événements `PLAY_PROGRESS`) ; `useWaveform.ts` charge le JSON de forme d'onde.
 - **`scene/`** : une scène r3f (`Scene.tsx`), chargée à la demande. `NodeCore` (polyèdre filaire), `WaveformRing` (anneau modulé par la forme d'onde), `ChoiceBranch` (branche + libellé HTML cliquable), `PathTrail` (Nodes déjà visités, estompés derrière), `Starfield`. `layoutBranches` calcule les positions (portrait : empilées ; paysage : en éventail).
 - **`components/`** : écrans (`StartScreen`, `StoryScreen`, `ErrorScreen`, `LoadingScreen`) et éléments (`NodeHud`, `PlayerControls`, `ChoiceList`, `EndingPanel`, `TranscriptPanel`, `SoundCloudCredit`, `HiddenPlayerFrame`).

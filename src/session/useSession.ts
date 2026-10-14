@@ -19,11 +19,12 @@ export const useSession = (story: Story) => {
   }, [story.start])
   const resume = useCallback(() => saved && dispatch({ type: 'resume', saved }), [saved])
   const choose = useCallback((to: string) => dispatch({ type: 'choose', to }), [])
+  const back = useCallback(() => dispatch({ type: 'back' }), [])
   const revealChoices = useCallback(() => dispatch({ type: 'reveal' }), [])
   const restart = useCallback(() => {
     writeSavedSession(null)
     dispatch({ type: 'restart' })
   }, [])
 
-  return { session, saved, start, resume, choose, revealChoices, restart }
+  return { session, saved, start, resume, choose, back, revealChoices, restart }
 }

@@ -9,6 +9,8 @@ interface NodeHudProps {
   status: PlayerStatus
   trackUrl: string | null
   choicesRevealed: boolean
+  canGoBack: boolean
+  onBack: () => void
   onTogglePause: () => void
   onReplay: () => void
   onSkip: () => void
@@ -24,7 +26,7 @@ const STATUS_LABELS: Record<PlayerStatus, string> = {
   error: 'Erreur audio',
 }
 
-export function NodeHud({ node, status, trackUrl, choicesRevealed, onTogglePause, onReplay, onSkip }: NodeHudProps) {
+export function NodeHud({ node, status, trackUrl, choicesRevealed, canGoBack, onBack, onTogglePause, onReplay, onSkip }: NodeHudProps) {
   return (
     <header className="hud">
       <p className="mono-dim" aria-live="polite">
@@ -34,6 +36,8 @@ export function NodeHud({ node, status, trackUrl, choicesRevealed, onTogglePause
       <PlayerControls
         status={status}
         canSkip={!choicesRevealed && node.choices.length > 0}
+        canGoBack={canGoBack}
+        onBack={onBack}
         onTogglePause={onTogglePause}
         onReplay={onReplay}
         onSkip={onSkip}

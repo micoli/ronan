@@ -10,6 +10,7 @@ export type SessionAction =
   | { type: 'start'; startId: string }
   | { type: 'resume'; saved: SavedSession }
   | { type: 'choose'; to: string }
+  | { type: 'back' }
   | { type: 'reveal' }
   | { type: 'restart' }
 
@@ -29,6 +30,11 @@ export const sessionReducer = (session: Session, action: SessionAction): Session
     case 'choose':
       if (session.currentNodeId === null) return session
       return { currentNodeId: action.to, path: [...session.path, session.currentNodeId], choicesRevealed: false }
+    case 'back': {
+      const previousId = session.path.at(-1)
+      if (previousId === undefined) return session
+      return { currentNodeId: previousId, path: session.path.slice(0, -1), choicesRevealed: false }
+    }
     case 'reveal':
       return { ...session, choicesRevealed: true }
     case 'restart':

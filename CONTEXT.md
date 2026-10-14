@@ -25,6 +25,9 @@ A Node with no outgoing Choices.
 **Current Node**:
 The Node the reader is presently listening to. Only its outgoing Choices are shown, as branches growing from it. The rest of the Story stays hidden.
 
+**Path**:
+The ordered Nodes the Reader has left behind to reach the Current Node. Going back pops the last Node of the Path and replays it.
+
 **Reader**:
 The person experiencing the Story. Makes Choices; carries no state (no stats, no inventory) between Nodes.
 _Avoid_: Player, user, hero

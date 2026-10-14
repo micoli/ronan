@@ -17,7 +17,7 @@ interface ReaderProps {
 }
 
 function Reader({ story }: ReaderProps) {
-  const { session, saved, start, resume, choose, revealChoices, restart } = useSession(story)
+  const { session, saved, start, resume, choose, back, revealChoices, restart } = useSession(story)
   const player = useSoundCloudPlayer()
   const reducedMotion = usePrefersReducedMotion()
   const webgl = useMemo(hasWebGL, [])
@@ -47,6 +47,13 @@ function Reader({ story }: ReaderProps) {
     player.playTrack(story.nodes[to].soundcloudUrl)
   }
 
+  const handleBack = () => {
+    const previousId = session.path.at(-1)
+    if (previousId === undefined) return
+    back()
+    player.playTrack(story.nodes[previousId].soundcloudUrl)
+  }
+
   if (player.status === 'error') return <ErrorScreen message="Le lecteur audio SoundCloud est inaccessible." />
 
   const currentNode = session.currentNodeId === null ? null : story.nodes[session.currentNodeId]
@@ -73,6 +80,7 @@ function Reader({ story }: ReaderProps) {
           waveformUrl={player.waveformUrl}
           clockRef={player.clockRef}
           onChoose={handleChoose}
+          onBack={handleBack}
           onRestart={restart}
           onTogglePause={player.togglePause}
           onReplay={player.replay}
