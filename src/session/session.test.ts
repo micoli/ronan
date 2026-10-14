@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { parseMap } from '../map/parseMap'
-import { branchesOf, createSessionReducer, initialSession, isValidSaved, openablePointIds, toSaved, type Session } from './session'
+import { branchesOf, statusesOf, createSessionReducer, initialSession, isValidSaved, openablePointIds, toSaved, type Session } from './session'
 
 const point = (connections: Record<string, unknown>[] = [], extra: Record<string, unknown> = {}) => ({
   title: 'T',
@@ -62,6 +62,15 @@ describe('session reducer', () => {
 
   it('restarts to the initial session', () => {
     expect(run(full, { type: 'open', pointId: 'a' }, { type: 'restart' })).toEqual(initialSession)
+  })
+})
+
+describe('statusesOf', () => {
+  it('keeps the new reachability hidden until the reveal', () => {
+    const opened = run(full, { type: 'open', pointId: 'a' })
+    expect(statusesOf(full, opened)).toMatchObject({ a: 'visited', b: 'unreached', c: 'unreached' })
+    const revealed = createSessionReducer(full)(opened, { type: 'reveal' })
+    expect(statusesOf(full, revealed)).toMatchObject({ a: 'visited', b: 'reachable', c: 'reachable', d: 'unreached' })
   })
 })
 

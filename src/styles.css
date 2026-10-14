@@ -180,6 +180,8 @@ summary:focus-visible {
 }
 
 .choice-list {
+  max-height: 45%;
+  overflow-y: auto;
   position: absolute;
   right: 0;
   bottom: 0;
@@ -250,5 +252,84 @@ summary:focus-visible {
   .branch-label {
     animation: none;
     opacity: 1;
+  }
+}
+
+.hud--drawer {
+  top: auto;
+  bottom: 0;
+  max-height: 45%;
+  align-items: stretch;
+  overflow-y: auto;
+  border-top: 1px solid var(--line);
+  background: rgb(0 0 0 / 0.88);
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  text-align: left;
+}
+
+.hud--drawer .controls {
+  justify-content: flex-start;
+}
+
+.hud--drawer .transcript summary {
+  text-align: left;
+}
+
+.ending--floating {
+  top: 3.5rem;
+  bottom: auto;
+}
+
+.capsule-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.capsule-button {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--dim);
+  padding: 0.5rem 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.capsule-button[aria-current='true'] {
+  border-color: var(--fg);
+  color: var(--fg);
+}
+
+.point-image {
+  max-width: 100%;
+  max-height: 30vh;
+  object-fit: contain;
+}
+
+.branch-label:disabled {
+  border-color: var(--line);
+  color: var(--dim);
+  cursor: default;
+}
+
+@media (min-width: 900px) {
+  .hud--drawer {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    width: 24rem;
+    max-height: none;
+    border-top: 0;
+    border-left: 1px solid var(--line);
+    padding-top: 1.5rem;
+  }
+
+  .ending--floating {
+    right: 24rem;
   }
 }

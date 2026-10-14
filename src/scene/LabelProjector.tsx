@@ -23,6 +23,7 @@ export function LabelProjector({ ids, targets, origin, labels, lift }: LabelProj
       const x = (scratch.x * 0.5 + 0.5) * size.width
       const y = (-scratch.y * 0.5 + 0.5) * size.height
       element.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`
+      element.style.visibility = scratch.z > 1 ? 'hidden' : 'visible'
     })
   })
 

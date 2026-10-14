@@ -9,6 +9,7 @@ import { isExplorationFinished } from './map/availability'
 import type { ExperienceMap } from './map/types'
 import { useMapLoader } from './map/useMapLoader'
 import { useSoundCloudPlayer } from './player/useSoundCloudPlayer'
+import { statusesOf } from './session/session'
 import { useSession } from './session/useSession'
 
 const REVEAL_DELAY_MS = 3000
@@ -67,6 +68,7 @@ function Reader({ map }: ReaderProps) {
   const current = session.currentPointId === null ? null : map.points[session.currentPointId]
   const previous = session.previousPointId === null ? null : map.points[session.previousPointId]
   const trail = session.journey.filter((id) => id !== session.currentPointId)
+  const statuses = statusesOf(map, session)
   const finished = !session.pendingReveal && isExplorationFinished(map, new Set(session.journey), session.currentPointId)
 
   return (
@@ -74,6 +76,8 @@ function Reader({ map }: ReaderProps) {
       <HiddenPlayerFrame iframeRef={player.iframeRef} initialTrackUrl={Object.values(map.points)[0].capsules[0].soundcloudUrl} />
       {session.started ? (
         <MapScreen
+          map={map}
+          statuses={statuses}
           point={current}
           capsuleIndex={session.capsuleIndex}
           trail={trail}

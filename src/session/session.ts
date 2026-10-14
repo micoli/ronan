@@ -1,4 +1,4 @@
-import { openableConnections, reachablePoints } from '../map/availability'
+import { openableConnections, pointStatuses, reachablePoints, type PointStatus } from '../map/availability'
 import type { ExperienceMap } from '../map/types'
 
 export interface Session {
@@ -60,6 +60,12 @@ export const openablePointIds = (map: ExperienceMap, session: Session): Set<stri
   if (session.pendingReveal) return openable
   openableConnections(map, session.currentPointId, new Set(session.journey)).forEach((connection) => openable.add(connection.to))
   return openable
+}
+
+export const statusesOf = (map: ExperienceMap, session: Session): Record<string, PointStatus> => {
+  const statuses = pointStatuses(map, revealedJourney(session))
+  session.journey.forEach((id) => (statuses[id] = 'visited'))
+  return statuses
 }
 
 export const branchesOf = (map: ExperienceMap, session: Session): Branch[] => {

@@ -8,6 +8,7 @@ import { TranscriptPanel } from './TranscriptPanel'
 
 interface PointHudProps {
   point: Point
+  drawer: boolean
   capsuleIndex: number
   status: PlayerStatus
   trackUrl: string | null
@@ -28,9 +29,9 @@ const STATUS_LABELS: Record<PlayerStatus, string> = {
   error: 'Erreur audio',
 }
 
-export function PointHud({ point, capsuleIndex, status, trackUrl, backTitle, onBack, onSelectCapsule, onTogglePause, onReplay }: PointHudProps) {
+export function PointHud({ point, drawer, capsuleIndex, status, trackUrl, backTitle, onBack, onSelectCapsule, onTogglePause, onReplay }: PointHudProps) {
   return (
-    <header className="hud">
+    <header className={drawer ? 'hud hud--drawer' : 'hud'}>
       <p className="mono-dim" aria-live="polite">
         {STATUS_LABELS[status]}
       </p>

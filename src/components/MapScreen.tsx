@@ -1,6 +1,7 @@
 import { lazy, Suspense, type RefObject } from 'react'
 import type { Quality } from '../hooks/capabilities'
-import type { Point } from '../map/types'
+import type { PointStatus } from '../map/availability'
+import type { ExperienceMap, Point } from '../map/types'
 import type { PlaybackClock, PlayerStatus } from '../player/useSoundCloudPlayer'
 import { useWaveform } from '../player/useWaveform'
 import type { Branch } from '../session/session'
@@ -9,9 +10,14 @@ import { EndingPanel } from './EndingPanel'
 import { MapHint } from './MapHint'
 import { PointHud } from './PointHud'
 
-const Scene = lazy(() => import('../scene/Scene').then((module) => ({ default: module.Scene })))
+const LocalScene = lazy(() => import('../scene/LocalScene').then((module) => ({ default: module.LocalScene })))
+const ConstellationScene = lazy(() =>
+  import('../scene/map/ConstellationScene').then((module) => ({ default: module.ConstellationScene })),
+)
 
 interface MapScreenProps {
+  map: ExperienceMap
+  statuses: Record<string, PointStatus>
   point: Point | null
   capsuleIndex: number
   trail: string[]
@@ -33,19 +39,35 @@ interface MapScreenProps {
 }
 
 export function MapScreen(props: MapScreenProps) {
-  const { point, trail, branches, finished, use3d, quality, clockRef, onOpen, onRestart } = props
+  const { map, statuses, point, trail, branches, finished, use3d, quality, clockRef, onOpen, onRestart } = props
   const samples = useWaveform(props.waveformUrl)
+  const isFull = map.settings.presentation === 'full'
+  const drawer = use3d && isFull
 
   return (
     <div className="story-screen">
       {use3d && (
         <Suspense fallback={null}>
-          <Scene trail={trail} branches={branches} samples={samples} clockRef={clockRef} quality={quality} onOpen={onOpen} />
+          {isFull ? (
+            <ConstellationScene
+              map={map}
+              statuses={statuses}
+              currentId={point?.id ?? null}
+              branches={branches}
+              samples={samples}
+              clockRef={clockRef}
+              quality={quality}
+              onOpen={onOpen}
+            />
+          ) : (
+            <LocalScene trail={trail} branches={branches} samples={samples} clockRef={clockRef} quality={quality} onOpen={onOpen} />
+          )}
         </Suspense>
       )}
       {point ? (
         <PointHud
           point={point}
+          drawer={drawer}
           capsuleIndex={props.capsuleIndex}
           status={props.status}
           trackUrl={props.trackUrl}
@@ -59,7 +81,7 @@ export function MapScreen(props: MapScreenProps) {
         <MapHint />
       )}
       {!use3d && <ChoiceList branches={branches} onOpen={onOpen} />}
-      {finished && <EndingPanel onRestart={onRestart} />}
+      {finished && <EndingPanel floating={drawer} onRestart={onRestart} />}
     </div>
   )
 }

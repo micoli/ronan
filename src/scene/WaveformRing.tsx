@@ -7,15 +7,17 @@ interface WaveformRingProps {
   samples: number[] | null
   clockRef: RefObject<PlaybackClock>
   segments: number
+  tilt?: number
+  fitToAspect?: boolean
 }
 
 const BASE_RADIUS = 0.95
 const AMPLITUDE = 0.6
 const TRACK_WINDOW = 0.06
 
-export function WaveformRing({ samples, clockRef, segments }: WaveformRingProps) {
+export function WaveformRing({ samples, clockRef, segments, tilt = -1.05, fitToAspect = true }: WaveformRingProps) {
   const aspect = useThree((state) => state.size.width / state.size.height)
-  const fitScale = Math.min(1, aspect * 1.25)
+  const fitScale = fitToAspect ? Math.min(1, aspect * 1.25) : 1
   const { geometry, positions } = useMemo(() => {
     const values = new Float32Array(segments * 3)
     const bufferGeometry = new BufferGeometry()
@@ -43,7 +45,7 @@ export function WaveformRing({ samples, clockRef, segments }: WaveformRingProps)
   })
 
   return (
-    <lineLoop geometry={geometry} rotation={[-1.05, 0, 0]} scale={fitScale}>
+    <lineLoop geometry={geometry} rotation={[tilt, 0, 0]} scale={fitScale}>
       <lineBasicMaterial color="#ffffff" />
     </lineLoop>
   )

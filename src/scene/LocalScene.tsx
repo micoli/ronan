@@ -46,7 +46,7 @@ function Branches({ branches, labels }: BranchesProps) {
   )
 }
 
-export function Scene({ trail, branches, samples, clockRef, quality, onOpen }: SceneProps) {
+export function LocalScene({ trail, branches, samples, clockRef, quality, onOpen }: SceneProps) {
   const labels = useRef(new Map<string, HTMLElement>())
 
   return (
