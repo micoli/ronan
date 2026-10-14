@@ -4,7 +4,7 @@ import type { Quality } from '../hooks/capabilities'
 import type { PlaybackClock } from '../player/useSoundCloudPlayer'
 import type { Branch } from '../session/session'
 import { ChoiceBranch } from './ChoiceBranch'
-import { LabelProjector } from './LabelProjector'
+import { LabelProjector, type LabelAnchor } from './LabelProjector'
 import { layoutBranches, type Vec3 } from './layoutBranches'
 import { NodeCore } from './NodeCore'
 import { PathTrail } from './PathTrail'
@@ -21,7 +21,6 @@ interface SceneProps {
 }
 
 const CORE_POSITION: Vec3 = [0, -2.1, 0]
-const LABEL_LIFT = 0.35
 const STAGGER_SECONDS = 0.15
 const GROW_SECONDS = 0.8
 
@@ -33,6 +32,10 @@ interface BranchesProps {
 function Branches({ branches, labels }: BranchesProps) {
   const aspect = useThree((state) => state.size.width / state.size.height)
   const targets = layoutBranches(branches.length, aspect)
+  const anchors: LabelAnchor[] = branches.map((branch, index) => ({
+    id: branch.id,
+    position: [CORE_POSITION[0] + targets[index][0], CORE_POSITION[1] + targets[index][1], CORE_POSITION[2] + targets[index][2]],
+  }))
 
   return (
     <>
@@ -41,7 +44,7 @@ function Branches({ branches, labels }: BranchesProps) {
           <ChoiceBranch key={branch.id} target={targets[index]} delay={index * STAGGER_SECONDS} />
         ))}
       </group>
-      <LabelProjector ids={branches.map((branch) => branch.id)} targets={targets} origin={CORE_POSITION} labels={labels} lift={LABEL_LIFT} />
+      <LabelProjector anchors={anchors} labels={labels} />
     </>
   )
 }

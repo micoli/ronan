@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { PlayerStatus } from '../player/useSoundCloudPlayer'
 import type { Point } from '../map/types'
 import { CapsuleList } from './CapsuleList'
@@ -17,6 +18,7 @@ interface PointHudProps {
   onSelectCapsule: (index: number) => void
   onTogglePause: () => void
   onReplay: () => void
+  children?: ReactNode
 }
 
 const STATUS_LABELS: Record<PlayerStatus, string> = {
@@ -29,7 +31,7 @@ const STATUS_LABELS: Record<PlayerStatus, string> = {
   error: 'Erreur audio',
 }
 
-export function PointHud({ point, drawer, capsuleIndex, status, trackUrl, backTitle, onBack, onSelectCapsule, onTogglePause, onReplay }: PointHudProps) {
+export function PointHud({ point, drawer, capsuleIndex, status, trackUrl, backTitle, onBack, onSelectCapsule, onTogglePause, onReplay, children }: PointHudProps) {
   return (
     <header className={drawer ? 'hud hud--drawer' : 'hud'}>
       <p className="mono-dim" aria-live="polite">
@@ -37,6 +39,7 @@ export function PointHud({ point, drawer, capsuleIndex, status, trackUrl, backTi
       </p>
       <h1 className="node-title">{point.hinge ? `★ ${point.title}` : point.title}</h1>
       <PlayerControls status={status} backTitle={backTitle} onBack={onBack} onTogglePause={onTogglePause} onReplay={onReplay} />
+      {children}
       {point.capsules.length > 1 && <CapsuleList capsules={point.capsules} activeIndex={capsuleIndex} onSelect={onSelectCapsule} />}
       {point.image && <PointImage path={point.image} alt={point.title} />}
       {point.text && <TranscriptPanel text={point.text} />}

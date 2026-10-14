@@ -1,4 +1,4 @@
-import { lazy, Suspense, type RefObject } from 'react'
+import { lazy, Suspense, useState, type RefObject } from 'react'
 import type { Quality } from '../hooks/capabilities'
 import type { PointStatus } from '../map/availability'
 import type { ExperienceMap, Point } from '../map/types'
@@ -8,6 +8,7 @@ import type { Branch } from '../session/session'
 import { ChoiceList } from './ChoiceList'
 import { EndingPanel } from './EndingPanel'
 import { MapHint } from './MapHint'
+import { NextPoints } from './NextPoints'
 import { PointHud } from './PointHud'
 
 const LocalScene = lazy(() => import('../scene/LocalScene').then((module) => ({ default: module.LocalScene })))
@@ -43,6 +44,9 @@ export function MapScreen(props: MapScreenProps) {
   const samples = useWaveform(props.waveformUrl)
   const isFull = map.settings.presentation === 'full'
   const drawer = use3d && isFull
+  const [highlightId, setHighlightId] = useState<string | null>(null)
+  const colorOf = (id: string) => map.families[map.points[id].families[0]]?.color ?? '#ffffff'
+  const nextPoints = drawer ? <NextPoints branches={branches} colorOf={colorOf} onOpen={onOpen} onHighlight={setHighlightId} /> : null
 
   return (
     <div className="story-screen">
@@ -57,6 +61,7 @@ export function MapScreen(props: MapScreenProps) {
               samples={samples}
               clockRef={clockRef}
               quality={quality}
+              highlightId={highlightId}
               onOpen={onOpen}
             />
           ) : (
@@ -76,9 +81,11 @@ export function MapScreen(props: MapScreenProps) {
           onSelectCapsule={props.onSelectCapsule}
           onTogglePause={props.onTogglePause}
           onReplay={props.onReplay}
-        />
+        >
+          {nextPoints}
+        </PointHud>
       ) : (
-        <MapHint />
+        <MapHint drawer={drawer}>{nextPoints}</MapHint>
       )}
       {!use3d && <ChoiceList branches={branches} onOpen={onOpen} />}
       {finished && <EndingPanel floating={drawer} onRestart={onRestart} />}

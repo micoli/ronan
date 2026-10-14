@@ -38,6 +38,15 @@ describe('layoutMap', () => {
     expect(mean(linked)).toBeLessThan(mean(unlinked))
   })
 
+  it('flattens the depth without touching the other axes', () => {
+    const round = layoutMap(map, 5, 1)
+    const flat = layoutMap(map, 5, 0.4)
+    for (const id of Object.keys(round)) {
+      expect(flat[id][0]).toBeCloseTo(round[id][0])
+      expect(flat[id][2]).toBeCloseTo(round[id][2] * 0.4)
+    }
+  })
+
   it('keeps pinned positions untouched', () => {
     const pinned = parseMap({
       start: ['a'],

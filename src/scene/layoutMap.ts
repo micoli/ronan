@@ -20,7 +20,7 @@ const hash = (text: string): number => {
 
 const length = (v: Vec3): number => Math.hypot(v[0], v[1], v[2])
 
-export const layoutMap = (map: ExperienceMap, radius = 5): Record<string, Vec3> => {
+export const layoutMap = (map: ExperienceMap, radius = 5, depthScale = 1): Record<string, Vec3> => {
   const ids = Object.keys(map.points)
   const random = seededRandom(hash(ids.join('|')))
   const index = new Map(ids.map((id, i) => [id, i]))
@@ -107,6 +107,8 @@ export const layoutMap = (map: ExperienceMap, radius = 5): Record<string, Vec3> 
   free.forEach((i) => positions[i].forEach((_, axis) => (positions[i][axis] -= center[axis])))
   const farthest = Math.max(...free.map((i) => length(positions[i])), EPSILON)
   if (farthest > radius) free.forEach((i) => positions[i].forEach((_, axis) => (positions[i][axis] *= radius / farthest)))
+
+  free.forEach((i) => (positions[i][2] *= depthScale))
 
   return Object.fromEntries(ids.map((id, i) => [id, positions[i]]))
 }

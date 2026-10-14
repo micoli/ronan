@@ -2,29 +2,69 @@ import { useFrame } from '@react-three/fiber'
 import { useMemo, type RefObject } from 'react'
 import { Vector3 } from 'three'
 import type { Vec3 } from './layoutBranches'
+import { placeLabels, type LabelRequest } from './placeLabels'
 
-interface LabelProjectorProps {
-  ids: string[]
-  targets: Vec3[]
-  origin: Vec3
-  labels: RefObject<Map<string, HTMLElement>>
-  lift: number
+export interface LabelAnchor {
+  id: string
+  position: Vec3
+  forced?: boolean
 }
 
-export function LabelProjector({ ids, targets, origin, labels, lift }: LabelProjectorProps) {
+interface LabelProjectorProps {
+  anchors: LabelAnchor[]
+  labels: RefObject<Map<string, HTMLElement>>
+}
+
+interface Projected {
+  anchor: LabelAnchor
+  element: HTMLElement
+  x: number
+  y: number
+  depth: number
+  behindCamera: boolean
+}
+
+export function LabelProjector({ anchors, labels }: LabelProjectorProps) {
   const scratch = useMemo(() => new Vector3(), [])
 
   useFrame(({ camera, size }) => {
-    ids.forEach((id, index) => {
-      const element = labels.current.get(id)
-      const target = targets[index]
-      if (!element || !target) return
-      scratch.set(origin[0] + target[0], origin[1] + target[1] + lift, origin[2] + target[2]).project(camera)
-      const x = (scratch.x * 0.5 + 0.5) * size.width
-      const y = (-scratch.y * 0.5 + 0.5) * size.height
-      element.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`
-      element.style.visibility = scratch.z > 1 ? 'hidden' : 'visible'
-    })
+    const projected: Projected[] = []
+    for (const anchor of anchors) {
+      const element = labels.current.get(anchor.id)
+      if (!element) continue
+      scratch.set(...anchor.position).project(camera)
+      projected.push({
+        anchor,
+        element,
+        x: (scratch.x * 0.5 + 0.5) * size.width,
+        y: (-scratch.y * 0.5 + 0.5) * size.height,
+        depth: scratch.z,
+        behindCamera: scratch.z > 1,
+      })
+    }
+
+    const requests: LabelRequest[] = projected
+      .filter((item) => !item.behindCamera)
+      .sort((a, b) => Number(b.anchor.forced ?? false) - Number(a.anchor.forced ?? false) || a.depth - b.depth)
+      .map((item) => ({
+        id: item.anchor.id,
+        x: item.x,
+        y: item.y,
+        width: item.element.offsetWidth,
+        height: item.element.offsetHeight,
+        forced: item.anchor.forced,
+      }))
+    const placements = placeLabels(requests, size)
+
+    for (const item of projected) {
+      const placement = placements.get(item.anchor.id)
+      if (!placement?.visible) {
+        item.element.style.visibility = 'hidden'
+        continue
+      }
+      item.element.style.visibility = 'visible'
+      item.element.style.transform = `translate(${placement.x}px, ${placement.y}px) translate(-50%, -50%)`
+    }
   })
 
   return null

@@ -6,13 +6,14 @@ import type { ExperienceMap } from '../../map/types'
 import type { Quality } from '../../hooks/capabilities'
 import type { PlaybackClock } from '../../player/useSoundCloudPlayer'
 import type { Branch } from '../../session/session'
-import { LabelProjector } from '../LabelProjector'
+import { LabelProjector, type LabelAnchor } from '../LabelProjector'
 import { layoutMap } from '../layoutMap'
 import { Starfield } from '../Starfield'
 import { WaveformRing } from '../WaveformRing'
 import { CameraFocus } from './CameraFocus'
 import { MapEdges } from './MapEdges'
 import { MapPoint } from './MapPoint'
+import { ScreenPicker, type PickItem } from './ScreenPicker'
 
 interface ConstellationSceneProps {
   map: ExperienceMap
@@ -22,26 +23,44 @@ interface ConstellationSceneProps {
   samples: number[] | null
   clockRef: RefObject<PlaybackClock>
   quality: Quality
+  highlightId: string | null
   onOpen: (pointId: string) => void
 }
 
 const MAP_RADIUS = 5
+const DEPTH_SCALE = 0.45
 const CENTER: [number, number, number] = [0, 0, 0]
-const LABEL_LIFT = 0.45
 const HALO_SCALE = 0.3
 
-export function ConstellationScene({ map, statuses, currentId, branches, samples, clockRef, quality, onOpen }: ConstellationSceneProps) {
+export function ConstellationScene({ map, statuses, currentId, branches, samples, clockRef, quality, highlightId, onOpen }: ConstellationSceneProps) {
   const labels = useRef(new Map<string, HTMLElement>())
   const controls = useRef<ElementRef<typeof OrbitControls>>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
-  const positions = useMemo(() => layoutMap(map, MAP_RADIUS), [map])
+  const positions = useMemo(() => layoutMap(map, MAP_RADIUS, DEPTH_SCALE), [map])
+
+  const emphasisId = hoveredId ?? highlightId
 
   const labelled = useMemo(() => {
     const items = [...branches]
-    const hovered = hoveredId ? map.points[hoveredId] : null
-    if (hovered && !items.some((item) => item.id === hovered.id)) items.push({ id: hovered.id, label: hovered.title })
+    const emphasised = emphasisId ? map.points[emphasisId] : null
+    if (emphasised && !items.some((item) => item.id === emphasised.id)) items.push({ id: emphasised.id, label: emphasised.title })
     return items
-  }, [branches, hoveredId, map])
+  }, [branches, emphasisId, map])
+
+  const anchors = useMemo<LabelAnchor[]>(
+    () => labelled.map((item) => ({ id: item.id, position: positions[item.id], forced: item.id === emphasisId })),
+    [labelled, positions, emphasisId],
+  )
+
+  const pickItems = useMemo<PickItem[]>(
+    () =>
+      Object.keys(map.points).map((id) => ({
+        id,
+        position: positions[id],
+        interactive: statuses[id] === 'reachable' || statuses[id] === 'visited',
+      })),
+    [map, positions, statuses],
+  )
 
   const isHidden = (id: string) => map.settings.unavailable === 'hidden' && statuses[id] === 'closed'
   const currentPosition = currentId ? positions[currentId] : CENTER
@@ -52,7 +71,7 @@ export function ConstellationScene({ map, statuses, currentId, branches, samples
         className="scene"
         dpr={[1, quality.maxDpr]}
         gl={{ antialias: quality.maxDpr > 1.5, alpha: false }}
-        camera={{ position: [0, 2, window.innerWidth < window.innerHeight ? 15 : 12], fov: 50 }}
+        camera={{ position: [0, 1.5, window.innerWidth < window.innerHeight ? 14 : 9.5], fov: 50 }}
       >
         <color attach="background" args={['#000000']} />
         <Starfield count={quality.stars} />
@@ -80,8 +99,7 @@ export function ConstellationScene({ map, statuses, currentId, branches, samples
               families={point.families.map((family) => map.families[family])}
               status={statuses[point.id]}
               current={point.id === currentId}
-              onOpen={onOpen}
-              onHover={setHoveredId}
+              emphasised={point.id === emphasisId}
             />
           ))}
         {currentId && (
@@ -91,13 +109,8 @@ export function ConstellationScene({ map, statuses, currentId, branches, samples
             </group>
           </Billboard>
         )}
-        <LabelProjector
-          ids={labelled.map((item) => item.id)}
-          targets={labelled.map((item) => positions[item.id])}
-          origin={CENTER}
-          labels={labels}
-          lift={LABEL_LIFT}
-        />
+        <ScreenPicker items={pickItems} onOpen={onOpen} onHover={setHoveredId} />
+        <LabelProjector anchors={anchors} labels={labels} />
       </Canvas>
       <div className="branch-labels">
         {labelled.map((item) => (

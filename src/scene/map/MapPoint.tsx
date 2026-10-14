@@ -14,57 +14,48 @@ interface MapPointProps {
   families: Family[]
   status: PointStatus
   current: boolean
-  onOpen: (id: string) => void
-  onHover: (id: string | null) => void
+  emphasised: boolean
 }
 
-const BASE_SIZE = 0.15
-const HIT_RADIUS = 0.45
+const BASE_SIZE = 0.17
+const DOT_SIZE = 0.055
+const UNDISCOVERED_STAR_RADIUS = 0.3
 const CLOSED_COLOR = '#808080'
 
-const OPACITY: Record<PointStatus, number> = { visited: 1, reachable: 0.95, unreached: 0.3, closed: 0.12 }
+const OPACITY: Record<PointStatus, number> = { visited: 1, reachable: 1, unreached: 0.35, closed: 0.12 }
 
-export function MapPoint({ point, position, families, status, current, onOpen, onHover }: MapPointProps) {
+export function MapPoint({ point, position, families, status, current, emphasised }: MapPointProps) {
   const group = useRef<Group>(null)
-  const interactive = status === 'visited' || status === 'reachable'
+  const detailed = status === 'visited' || status === 'reachable' || emphasised
   const color = status === 'closed' ? CLOSED_COLOR : (families[0]?.color ?? '#ffffff')
-  const size = BASE_SIZE * (point.hinge ? 1.35 : 1) * (current ? 1.6 : 1)
+  const size = BASE_SIZE * (point.hinge ? 1.3 : 1) * (current ? 1.6 : 1) * (emphasised ? 1.5 : 1)
 
   useFrame(({ clock }) => {
     if (!group.current) return
-    const pulse = status === 'reachable' ? 1 + 0.18 * Math.sin(clock.elapsedTime * 3 + position[0]) : 1
-    group.current.scale.setScalar(size * pulse)
+    const pulse = status === 'reachable' ? 1 + 0.2 * Math.sin(clock.elapsedTime * 3 + position[0]) : 1
+    group.current.scale.setScalar((detailed ? size : DOT_SIZE) * pulse)
   })
 
   return (
     <>
       <group position={position}>
         <group ref={group}>
-          <PointShape shape={families[0]?.shape ?? 'circle'} color={color} filled={status === 'visited'} opacity={OPACITY[status]} />
+          {detailed ? (
+            <PointShape shape={families[0]?.shape ?? 'circle'} color={color} filled={status === 'visited'} opacity={OPACITY[status]} />
+          ) : (
+            <mesh>
+              <sphereGeometry args={[1, 6, 6]} />
+              <meshBasicMaterial color={color} transparent opacity={OPACITY[status]} />
+            </mesh>
+          )}
         </group>
-        <mesh
-          onClick={(event) => {
-            if (!interactive || event.delta > 6) return
-            event.stopPropagation()
-            onOpen(point.id)
-          }}
-          onPointerOver={() => {
-            onHover(point.id)
-            if (interactive) document.body.style.cursor = 'pointer'
-          }}
-          onPointerOut={() => {
-            onHover(null)
-            document.body.style.cursor = ''
-          }}
-        >
-          <sphereGeometry args={[HIT_RADIUS, 8, 8]} />
-          <meshBasicMaterial transparent opacity={0} depthWrite={false} />
-        </mesh>
       </group>
-      {families.length > 1 && status !== 'closed' && (
-        <FamilyRing position={position} colors={families.map((family) => family.color)} radius={size * 2.1} opacity={OPACITY[status]} />
+      {detailed && families.length > 1 && (
+        <FamilyRing position={position} colors={families.map((family) => family.color)} radius={size * 1.9} opacity={OPACITY[status]} />
       )}
-      {point.hinge && status !== 'closed' && <HingeStar position={position} radius={size * 2.3} opacity={OPACITY[status] * 0.7} />}
+      {point.hinge && status !== 'closed' && (
+        <HingeStar position={position} radius={detailed ? size * 2 : UNDISCOVERED_STAR_RADIUS} opacity={detailed ? 0.7 : 0.3} />
+      )}
     </>
   )
 }
