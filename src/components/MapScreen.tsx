@@ -35,12 +35,13 @@ interface MapScreenProps {
   onBack: () => void
   onSelectCapsule: (index: number) => void
   onRestart: () => void
+  onExit?: () => void
   onTogglePause: () => void
   onReplay: () => void
 }
 
 export function MapScreen(props: MapScreenProps) {
-  const { map, statuses, point, trail, branches, finished, use3d, quality, clockRef, onOpen, onRestart } = props
+  const { map, statuses, point, trail, branches, finished, use3d, quality, clockRef, onOpen, onRestart, onExit } = props
   const samples = useWaveform(props.waveformUrl)
   const isFull = map.settings.presentation === 'full'
   const drawer = use3d && isFull
@@ -88,7 +89,7 @@ export function MapScreen(props: MapScreenProps) {
         <MapHint drawer={drawer}>{nextPoints}</MapHint>
       )}
       {!use3d && <ChoiceList branches={branches} onOpen={onOpen} />}
-      {finished && <EndingPanel floating={drawer} onRestart={onRestart} />}
+      {finished && <EndingPanel floating={drawer} onRestart={onRestart} onExit={onExit} />}
     </div>
   )
 }

@@ -9,7 +9,8 @@ Le vocabulaire (Map, Point, Capsule, Connection, Journey…) est défini dans [`
 ```bash
 npm install
 npm run dev        # http://localhost:5173/ronan/
-npm test           # tests unitaires (parseur, session, layout)
+npm test           # tests unitaires (parseur, session, layout, cartes d'exemple)
+npm run validate   # valide l'index et les cartes de public/maps/ (ou les fichiers/URLs donnés)
 npm run build      # typecheck + build dans dist/
 ```
 
@@ -19,38 +20,51 @@ Node 22+ recommandé.
 
 | Variable | Rôle | Défaut |
 | --- | --- | --- |
-| `VITE_MAP_URL` | URL du JSON de la Map (ex. URL « raw » d'un gist) | `public/map.json` (démo) |
+| `VITE_MAPS_INDEX_URL` | URL de l'index des expériences (ex. URL « raw » d'un gist) | `public/maps/index.json` |
+| `VITE_MAP_URL` | URL d'une seule Map : court-circuite l'index et l'écran de sélection | non défini |
 | `BASE_PATH` | Chemin de base du site (build) | `/ronan/` |
 
-Exemple :
+Les expériences sont listées dans `public/maps/index.json` (voir [`docs/map-format.md`](docs/map-format.md)). Quand il y en a plusieurs, l'accueil propose un menu ; `?map=<id>` ouvre directement une expérience (`/ronan/?map=test-30`). Avec une seule expérience, l'écran de sélection est sauté.
 
 ```bash
-VITE_MAP_URL=https://gist.githubusercontent.com/<user>/<id>/raw/map.json npm run dev
+# index hébergé ailleurs (les chemins de cartes y sont relatifs à l'index)
+VITE_MAPS_INDEX_URL=https://gist.githubusercontent.com/<user>/<id>/raw/index.json npm run dev
 
-# carte de test de 30 Points
+# une seule carte, sans menu
 VITE_MAP_URL=/ronan/maps/test-30.json npm run dev
 ```
 
-Le format du JSON est décrit dans [`docs/map-format.md`](docs/map-format.md). L'URL « raw » d'un gist autorise le CORS, donc le site peut la charger depuis `github.io`. GitHub la met en cache environ 5 minutes.
+L'URL « raw » d'un gist autorise le CORS, donc le site peut la charger depuis `github.io`. GitHub la met en cache environ 5 minutes.
+
+### Valider ses données
+
+```bash
+npm run validate                       # tout public/maps/
+npm run validate -- ma-carte.json      # un fichier
+npm run validate -- https://…/raw/map.json
+npm run validate -- --strict           # les avertissements font aussi échouer
+```
+
+Erreurs (code de sortie 1) : références inconnues, Point inatteignable, Capsule manquante, image locale introuvable, carte absente de l'index… Avertissements : Points impossibles à atteindre à cause des conditions, famille inutilisée, URL non SoundCloud, aucune famille déclarée. Le workflow de déploiement lance cette validation.
 
 ## Déploiement (GitHub Pages)
 
 Le workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) teste, construit et publie sur Pages à chaque push sur `main`.
 
 1. Dans le dépôt : *Settings → Pages → Source : GitHub Actions*.
-2. Optionnel : *Settings → Secrets and variables → Actions → Variables* : créer `MAP_URL` avec l'URL du JSON.
+2. Optionnel : *Settings → Secrets and variables → Actions → Variables* : créer `MAPS_INDEX_URL` (ou `MAP_URL` pour une seule carte) avec l'URL du JSON.
 3. Site publié sur `https://<user>.github.io/ronan/`.
 
 Si le dépôt change de nom, adapter `BASE_PATH` dans le workflow.
 
 ## Fonctionnement
 
-- **Accueil** : bouton « Commencer » (ou « Reprendre » si une progression est sauvegardée). Ce tap débloque l'audio sur mobile.
+- **Accueil** : menu des expériences s'il y en a plusieurs, puis bouton « Commencer » (ou « Reprendre » si une progression est sauvegardée). Ce tap débloque l'audio sur mobile.
 - **Ouverture d'un Point** : son titre s'affiche et sa première Capsule joue (une seule à la fois, ouvrir un autre Point coupe la lecture). Un Point à plusieurs Capsules propose une liste pour choisir.
 - **Accessibilité des Points** : 3 secondes après le début de l'écoute d'un Point nouvellement visité, les Points qui deviennent accessibles apparaissent. Les règles `requires` / `unless` des Connections ouvrent ou ferment des possibilités (voir [`docs/map-format.md`](docs/map-format.md)).
 - **Retour** : le bouton « « » rouvre le dernier Point écouté avant le Point courant.
 - **Fin** : sur un Point `final`, ou quand plus rien n'est accessible, « Recommencer » est proposé.
-- **Progression** : Journey sauvegardé dans `localStorage` (clé `ronan:session`).
+- **Progression** : Journey sauvegardé par expérience dans `localStorage` (clé `ronan:session:<id>`).
 
 ### Accessibilité et dégradations
 
@@ -70,7 +84,8 @@ Si le dépôt change de nom, adapter `BASE_PATH` dans le workflow.
 
 ```
 src/
-  map/        types, validation du JSON, règles de disponibilité, chargement
+  experiences/ index des expériences, sélection par URL
+  map/        types, validation du JSON, règles de disponibilité, audit, chargement
   session/    Journey et état de lecture (reducer pur), sauvegarde localStorage
   player/     widget SoundCloud, horloge de lecture, forme d'onde
   scene/      scène 3D (react-three-fiber) : noyau, anneau, branches, trace

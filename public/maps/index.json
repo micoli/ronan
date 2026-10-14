@@ -1,0 +1,16 @@
+{
+  "experiences": [
+    {
+      "id": "story-demo",
+      "title": "Réveil en orbite",
+      "description": "Histoire à choix en 5 points : une seule branche visible à la fois.",
+      "map": "story-demo.json"
+    },
+    {
+      "id": "test-30",
+      "title": "Cartographie de test",
+      "description": "30 points, 5 familles, charnières et conditions : toute la constellation visible.",
+      "map": "test-30.json"
+    }
+  ]
+}

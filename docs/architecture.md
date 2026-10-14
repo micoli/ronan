@@ -5,7 +5,7 @@ Site statique (Vite + React + TypeScript + react-three-fiber), sans backend. Voc
 ## Flux de données
 
 ```
-map.json (gist / public) ──fetch──▶ parseMap ──▶ ExperienceMap
+index.json ──▶ ExperienceHub (menu, ?map=<id>) ──▶ map.json ──fetch──▶ parseMap ──▶ ExperienceMap
                                                     │
                           useSession (reducer pur + localStorage)
                                                     │ point courant, Journey, Points accessibles
@@ -17,14 +17,15 @@ MapScreen ──▶ Scene (3D)  ou  ChoiceList (2D)
 
 ## Modules
 
-- **`map/`** : `types.ts` (ExperienceMap, Point, Capsule, Connection, Family), `parseMap.ts` (validation, erreurs listées), `availability.ts` (fonctions pures : Points accessibles, fermés, non atteints, fin d'exploration), `loadMap.ts` (fetch + `VITE_MAP_URL`), `useMapLoader.ts`.
-- **`session/`** : `session.ts` contient le reducer pur (`begin`, `resume`, `open`, `selectCapsule`, `reveal`, `restart`), le calcul des Points ouvrables (`openablePointIds`) et des branches à afficher (`branchesOf`). `savedSessionStorage.ts` lit/écrit `ronan:session` (sauvegarde invalide ignorée). `useSession.ts` branche le tout.
+- **`experiences/`** : `parseIndex.ts` (validation de l'index), `loadIndex.ts` (URL de l'index, résolution des chemins de cartes relatifs à l'index, mode « une seule carte » via `VITE_MAP_URL`), `useExperienceIndex.ts`, `selectedExperienceUrl.ts` (paramètre `?map=`).
+- **`map/`** : `types.ts` (ExperienceMap, Point, Capsule, Connection, Family), `parseMap.ts` (validation, erreurs listées), `availability.ts` (fonctions pures : Points accessibles, fermés, non atteints, fin d'exploration), `auditMap.ts` (avertissements : Points impossibles à atteindre selon les conditions, familles inutilisées, URLs non SoundCloud), `loadMap.ts` (fetch), `useMapLoader.ts`.
+- **`session/`** : `session.ts` contient le reducer pur (`begin`, `resume`, `open`, `selectCapsule`, `reveal`, `restart`), le calcul des Points ouvrables (`openablePointIds`) et des branches à afficher (`branchesOf`). `savedSessionStorage.ts` lit/écrit `ronan:session:<id de l'expérience>` (sauvegarde invalide ignorée). `useSession.ts` branche le tout.
 - **`player/`** : `soundcloudWidget.ts` charge l'API du widget ; `useSoundCloudPlayer.ts` expose `status`, `playTrack`, `togglePause`, `replay` et une horloge `clockRef` (position extrapolée entre les événements `PLAY_PROGRESS`) ; `useWaveform.ts` charge le JSON de forme d'onde.
 - **`scene/`** : deux scènes r3f chargées à la demande, selon `settings.presentation`.
   - **`LocalScene`** (présentation `local`) : `NodeCore` (polyèdre filaire), `ChoiceBranch` (branche et nœud d'extrémité), `PathTrail` (Points déjà visités, estompés), `layoutBranches` (portrait : empilées ; paysage : en éventail).
   - **`map/ConstellationScene`** (présentation `full`) : toute la Map en 3D avec `OrbitControls` (rotation au doigt/souris, pincement pour zoomer, rotation lente tant qu'aucun Point n'est ouvert). `layoutMap` calcule une disposition force-dirigée déterministe (positions `position` respectées, cohésion par famille). `MapPoint` dessine un Point selon son statut (visité plein, accessible filaire et pulsant, non atteint estompé, fermé très estompé ou masqué), `PointShape` sa forme de famille (polyèdre en fil de fer : globe, octaèdre, pyramide, cube ou dodécaèdre, en lente rotation, avec un petit noyau plein une fois visité), `FamilyRing` l'anneau segmenté des multi-familles, `HingeStar` l'étoile des charnières, `MapEdges` les liens (intensité par `edgeIntensity`), `CameraFocus` recentre doucement la caméra sur le Point ouvert. L'anneau de forme d'onde entoure le Point courant. `ScreenPicker` gère les taps : il projette les Points dans l'écran et ouvre le plus proche du doigt ou de la souris dans un rayon généreux (`pickNearest`, rayon plus grand au tactile), avec aperçu pendant l'appui. Les Points non découverts ne sont que de petites pastilles ; la carte est aplatie en profondeur (`layoutMap`, `depthScale`) pour limiter les recouvrements.
   - Communs : `WaveformRing` (anneau modulé par la forme d'onde), `LabelProjector` (positionne des boutons DOM par projection 3D→écran, avec `placeLabels` : placement anti-collision au-dessus, en dessous, à droite ou à gauche du Point, libellé masqué faute de place, sauf le Point survolé), `Starfield`.
-- **`components/`** : écrans (`StartScreen`, `MapScreen` (panneau tiroir en 3D `full` : en bas sur mobile, à droite dès 900 px), `ErrorScreen`, `LoadingScreen`) et éléments (`PointHud`, `NextPoints` (liste « Accessibles », qui met en surbrillance le Point sur la carte), `PlayerControls`, `CapsuleList`, `PointImage`, `ChoiceList`, `EndingPanel`, `TranscriptPanel`, `SoundCloudCredit`, `HiddenPlayerFrame`).
+- **`components/`** : `ExperienceHub` (index, sélection), `MapLoader` (chargement d'une Map), `Reader` (une expérience : session, lecteur, écrans), `ExperienceMenu`. Écrans (`StartScreen`, `MapScreen` (panneau tiroir en 3D `full` : en bas sur mobile, à droite dès 900 px), `ErrorScreen`, `LoadingScreen`) et éléments (`PointHud`, `NextPoints` (liste « Accessibles », qui met en surbrillance le Point sur la carte), `PlayerControls`, `CapsuleList`, `PointImage`, `ChoiceList`, `EndingPanel`, `TranscriptPanel`, `SoundCloudCredit`, `HiddenPlayerFrame`).
 - **`hooks/capabilities.ts`** : `usePrefersReducedMotion`, `hasWebGL`, `detectQuality`.
 
 ## Choix de conception
@@ -38,7 +39,11 @@ MapScreen ──▶ Scene (3D)  ou  ChoiceList (2D)
 - **Dégradation** : WebGL absent ou `prefers-reduced-motion` → `ChoiceList` 2D, pas de `Scene`.
 - **Un composant React par fichier**, early returns, commentaires rares.
 
+## Outils
+
+`npm run validate` (`scripts/validate.ts`, exécuté avec `tsx`) réutilise `parseMap`, `parseIndex` et `auditMap`, ajoute la vérification des images locales et des fichiers listés dans l'index, et accepte des chemins ou des URLs. Il tourne dans le workflow de déploiement.
+
 ## Tests
 
-`npm test` : parseur de Map, règles de disponibilité, reducer de session, layout des branches, validité et explorabilité des cartes d'exemple de `public/`.
+`npm test` : parseurs de Map et d'index, audit, règles de disponibilité, reducer de session, layout des branches, validité et explorabilité des cartes d'exemple de `public/`.
 Le comportement audio (widget, iOS) se vérifie à la main dans un navigateur.

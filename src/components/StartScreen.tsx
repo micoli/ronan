@@ -1,15 +1,17 @@
 interface StartScreenProps {
   ready: boolean
   canResume: boolean
+  title: string
   onStart: () => void
   onResume: () => void
+  onExit?: () => void
 }
 
-export function StartScreen({ ready, canResume, onStart, onResume }: StartScreenProps) {
+export function StartScreen({ ready, canResume, title, onStart, onResume, onExit }: StartScreenProps) {
   return (
     <main className="screen">
       <h1 className="title">RONAN</h1>
-      <p className="mono-dim">Une histoire à écouter. Chaque choix ouvre une branche.</p>
+      <p className="mono-dim">{title}</p>
       <div className="actions">
         {canResume && (
           <button className="button" disabled={!ready} onClick={onResume}>
@@ -21,6 +23,11 @@ export function StartScreen({ ready, canResume, onStart, onResume }: StartScreen
         </button>
       </div>
       {!ready && <p className="mono-dim">Connexion au lecteur audio…</p>}
+      {onExit && (
+        <button className="link-button" onClick={onExit}>
+          Autres expériences
+        </button>
+      )}
     </main>
   )
 }

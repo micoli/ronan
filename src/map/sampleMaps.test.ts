@@ -1,14 +1,28 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import { parseIndex } from '../experiences/parseIndex'
 import { reachablePoints } from './availability'
 import { parseMap } from './parseMap'
 
 const PUBLIC_DIR = new URL('../../public/', import.meta.url)
 
-const mapFiles = [
-  'map.json',
-  ...readdirSync(new URL('maps/', PUBLIC_DIR)).map((name) => `maps/${name}`),
-]
+const mapFiles = readdirSync(new URL('maps/', PUBLIC_DIR))
+  .filter((name) => name !== 'index.json')
+  .map((name) => `maps/${name}`)
+
+describe('experiences index', () => {
+  const index = parseIndex(JSON.parse(readFileSync(new URL('maps/index.json', PUBLIC_DIR), 'utf8')))
+
+  it('lists only maps that exist and are valid', () => {
+    for (const entry of index.experiences) {
+      expect(mapFiles).toContain(`maps/${entry.map}`)
+    }
+  })
+
+  it('lists every map file', () => {
+    expect(index.experiences.map((entry) => `maps/${entry.map}`).sort()).toEqual([...mapFiles].sort())
+  })
+})
 
 describe.each(mapFiles)('sample map %s', (file) => {
   const map = parseMap(JSON.parse(readFileSync(new URL(file, PUBLIC_DIR), 'utf8')))

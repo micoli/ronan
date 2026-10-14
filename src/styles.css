@@ -377,3 +377,63 @@ summary:focus-visible {
   width: 0.6rem;
   height: 0.6rem;
 }
+
+.experience-list {
+  display: flex;
+  width: 100%;
+  max-width: 32rem;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.experience {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 0.4rem;
+  border: 1px solid var(--fg);
+  background: transparent;
+  color: var(--fg);
+  padding: 1rem;
+  font-family: var(--mono);
+  text-align: left;
+  cursor: pointer;
+}
+
+.experience:hover,
+.experience:focus-visible {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.experience-title {
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.experience-description {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  opacity: 0.7;
+}
+
+.link-button {
+  border: 0;
+  background: transparent;
+  color: var(--dim);
+  padding: 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.link-button:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
+}

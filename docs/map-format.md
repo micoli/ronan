@@ -84,8 +84,31 @@ Une Map invalide n'est pas lue : l'écran d'erreur liste les problèmes.
 - Chaque Point est atteignable depuis `start` en suivant les Connections (conditions ignorées).
 - Familles : couleur `#rrggbb` et forme valide.
 
+## Index des expériences
+
+`public/maps/index.json` (ou `VITE_MAPS_INDEX_URL`) liste les expériences proposées à l'accueil :
+
+```json
+{
+  "experiences": [
+    { "id": "test-30", "title": "Cartographie de test", "description": "Optionnel", "map": "test-30.json" }
+  ]
+}
+```
+
+| Champ | Description |
+| --- | --- |
+| `id` | Identifiant unique, utilisé dans l'URL (`?map=<id>`) et pour la sauvegarde de progression |
+| `title` | Nom affiché dans le menu |
+| `description` | Phrase optionnelle sous le titre |
+| `map` | Chemin du fichier de la Map, relatif à l'index (ou URL absolue) |
+
+## Valider
+
+`npm run validate` vérifie l'index et chaque Map (voir le README). Une Map peut passer la validation du chargement tout en ayant des Points impossibles à atteindre à cause des conditions : c'est signalé par un avertissement.
+
 ## Évolution
 
 La progression sauvegardée référence les IDs de Points. **Ne jamais renommer un ID existant**, sinon la reprise est perdue (une sauvegarde invalide est simplement ignorée).
 
-Les pistes SoundCloud doivent être publiques (ou intégrables). Des cartes d'exemple sont dans `public/map.json` (histoire en présentation `local`) et `public/maps/test-30.json` (30 Points, 5 familles, charnières et conditions).
+Les pistes SoundCloud doivent être publiques (ou intégrables). Des cartes d'exemple sont dans `public/maps/story-demo.json` (histoire en présentation `local`) et `public/maps/test-30.json` (30 Points, 5 familles, charnières et conditions).
