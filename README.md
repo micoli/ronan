@@ -44,7 +44,7 @@ Si le dépôt change de nom, adapter `BASE_PATH` dans le workflow.
 
 - **Accueil** : bouton « Commencer » (ou « Reprendre » si une progression est sauvegardée). Ce tap débloque l'audio sur mobile.
 - **Lecture d'un Node** : le titre s'affiche, la piste joue, une forme d'onde filaire réagit au son.
-- **Choix** : les branches apparaissent 3 secondes après le début de la lecture (ou à la fin de la piste si elle est plus courte) ; « Passer à la suite » les affiche immédiatement. Un tap sur une branche charge le Node suivant.
+- **Choix** : les branches apparaissent 3 secondes après le début de la lecture (ou à la fin de la piste si elle est plus courte). Un tap sur une branche charge le Node suivant.
 - **Retour** : le bouton « « » ramène au Node précédent (le chemin est dépilé, le Node est rejoué). Absent sur le Start Node.
 - **Fin** : un Node sans Choice propose « Recommencer ».
 - **Progression** : Node courant et chemin parcouru sauvegardés dans `localStorage` (clé `ronan:session`).

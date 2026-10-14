@@ -27,7 +27,7 @@ StoryScreen ──▶ Scene (3D)  ou  ChoiceList (2D)
 ## Choix de conception
 
 - **Geste utilisateur** : `playTrack` est appelé directement dans les handlers de tap (Commencer, Reprendre, Choice), jamais depuis un effet, pour rester dans la chaîne du geste exigée par les navigateurs mobiles.
-- **Choices révélés** : 3 s après le passage en lecture (le minuteur repart si le Reader met en pause puis reprend), à l'événement `FINISH` si la piste est plus courte, ou via « Passer ». L'audio continue dans tous les cas.
+- **Choices révélés** : 3 s après le passage en lecture (le minuteur repart si le Reader met en pause puis reprend), à l'événement `FINISH` si la piste est plus courte. L'audio continue dans tous les cas.
 - **Race de chargement** : un compteur (`loadToken`) ignore les callbacks d'un chargement périmé ; un `play()` explicite suit le `load()` car l'auto-lecture du widget est parfois ignorée quand l'URL est déjà chargée.
 - **Dégradation** : WebGL absent ou `prefers-reduced-motion` → `ChoiceList` 2D, pas de `Scene`.
 - **Un composant React par fichier**, early returns, commentaires rares.

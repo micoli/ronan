@@ -84,7 +84,6 @@ function Reader({ story }: ReaderProps) {
           onRestart={restart}
           onTogglePause={player.togglePause}
           onReplay={player.replay}
-          onSkip={revealChoices}
         />
       )}
     </>

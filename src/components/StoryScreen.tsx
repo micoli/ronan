@@ -24,7 +24,6 @@ interface StoryScreenProps {
   onRestart: () => void
   onTogglePause: () => void
   onReplay: () => void
-  onSkip: () => void
 }
 
 export function StoryScreen(props: StoryScreenProps) {
@@ -44,12 +43,10 @@ export function StoryScreen(props: StoryScreenProps) {
         node={node}
         status={props.status}
         trackUrl={props.trackUrl}
-        choicesRevealed={choicesRevealed}
         canGoBack={path.length > 0}
         onBack={props.onBack}
         onTogglePause={props.onTogglePause}
         onReplay={props.onReplay}
-        onSkip={props.onSkip}
       />
       {!use3d && choicesRevealed && <ChoiceList choices={visibleChoices} onChoose={onChoose} />}
       {isEnding && choicesRevealed && <EndingPanel onRestart={onRestart} />}

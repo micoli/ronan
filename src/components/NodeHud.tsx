@@ -8,12 +8,10 @@ interface NodeHudProps {
   node: StoryNode
   status: PlayerStatus
   trackUrl: string | null
-  choicesRevealed: boolean
   canGoBack: boolean
   onBack: () => void
   onTogglePause: () => void
   onReplay: () => void
-  onSkip: () => void
 }
 
 const STATUS_LABELS: Record<PlayerStatus, string> = {
@@ -26,7 +24,7 @@ const STATUS_LABELS: Record<PlayerStatus, string> = {
   error: 'Erreur audio',
 }
 
-export function NodeHud({ node, status, trackUrl, choicesRevealed, canGoBack, onBack, onTogglePause, onReplay, onSkip }: NodeHudProps) {
+export function NodeHud({ node, status, trackUrl, canGoBack, onBack, onTogglePause, onReplay }: NodeHudProps) {
   return (
     <header className="hud">
       <p className="mono-dim" aria-live="polite">
@@ -35,12 +33,10 @@ export function NodeHud({ node, status, trackUrl, choicesRevealed, canGoBack, on
       <h1 className="node-title">{node.title}</h1>
       <PlayerControls
         status={status}
-        canSkip={!choicesRevealed && node.choices.length > 0}
         canGoBack={canGoBack}
         onBack={onBack}
         onTogglePause={onTogglePause}
         onReplay={onReplay}
-        onSkip={onSkip}
       />
       {node.transcript && <TranscriptPanel transcript={node.transcript} />}
       <SoundCloudCredit trackUrl={trackUrl} />

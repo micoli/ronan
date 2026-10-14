@@ -13,7 +13,7 @@ One unit of the Story. Has a title and an audio recording (mp3) that is played t
 _Avoid_: Passage, page, chapter, scene
 
 **Choice**:
-A link from one Node to another Node, offered to the Reader once the Current Node has been heard (or skipped). Carries its own written label, distinct from the target Node's title.
+A link from one Node to another Node, offered to the Reader a few seconds after the Current Node starts playing. Carries its own written label, distinct from the target Node's title.
 _Avoid_: Option, branch, link
 
 **Start Node**:
