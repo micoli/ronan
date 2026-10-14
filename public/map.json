@@ -1,0 +1,41 @@
+{
+  "title": "Démo",
+  "settings": { "presentation": "local", "unavailable": "dimmed" },
+  "start": ["awakening"],
+  "points": {
+    "awakening": {
+      "title": "Réveil en orbite",
+      "capsules": [{ "soundcloudUrl": "https://soundcloud.com/forss/flickermood" }],
+      "text": "Démo : remplacez ce fichier par votre histoire.",
+      "connections": [
+        { "to": "airlock", "label": "Ouvrir le sas" },
+        { "to": "beacon", "label": "Écouter la balise" },
+        { "to": "silence", "label": "Rester immobile" }
+      ]
+    },
+    "airlock": {
+      "title": "Le sas",
+      "capsules": [{ "soundcloudUrl": "https://soundcloud.com/forss/flickermood" }],
+      "connections": [{ "to": "beacon", "label": "Suivre le couloir" }]
+    },
+    "beacon": {
+      "title": "La balise",
+      "hinge": true,
+      "capsules": [{ "soundcloudUrl": "https://soundcloud.com/forss/flickermood" }],
+      "connections": [
+        { "to": "contact", "label": "Répondre" },
+        { "to": "silence", "label": "Couper le signal" }
+      ]
+    },
+    "contact": {
+      "title": "Contact",
+      "final": true,
+      "capsules": [{ "soundcloudUrl": "https://soundcloud.com/forss/flickermood" }]
+    },
+    "silence": {
+      "title": "Silence",
+      "final": true,
+      "capsules": [{ "soundcloudUrl": "https://soundcloud.com/forss/flickermood" }]
+    }
+  }
+}

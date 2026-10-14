@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react'
-import { loadStory } from './loadStory'
-import type { Story } from './types'
+import { loadMap } from './loadMap'
+import type { ExperienceMap } from './types'
 
-export type StoryLoadState =
+export type MapLoadState =
   | { status: 'loading' }
-  | { status: 'ready'; story: Story }
+  | { status: 'ready'; map: ExperienceMap }
   | { status: 'error'; message: string }
 
-export const useStoryLoader = (): StoryLoadState => {
-  const [state, setState] = useState<StoryLoadState>({ status: 'loading' })
+export const useMapLoader = (): MapLoadState => {
+  const [state, setState] = useState<MapLoadState>({ status: 'loading' })
 
   useEffect(() => {
     let cancelled = false
-    loadStory()
-      .then((story) => !cancelled && setState({ status: 'ready', story }))
+    loadMap()
+      .then((map) => !cancelled && setState({ status: 'ready', map }))
       .catch((error: unknown) => !cancelled && setState({ status: 'error', message: String(error instanceof Error ? error.message : error) }))
     return () => {
       cancelled = true

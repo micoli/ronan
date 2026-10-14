@@ -68,6 +68,12 @@ describe('parseMap', () => {
     expect(issues).toContain('"color" must be a hex color')
   })
 
+  it('requires a single start point for a local map', () => {
+    const points = { a: point(), b: point() }
+    expect(issuesOf({ start: ['a', 'b'], settings: { presentation: 'local' }, points }).join()).toContain('exactly one start')
+    expect(issuesOf({ start: ['a', 'b'], settings: { presentation: 'full' }, points })).toEqual([])
+  })
+
   it('rejects an invalid presentation', () => {
     expect(issuesOf({ start: ['a'], settings: { presentation: 'weird' }, points: { a: point() } }).join()).toContain('presentation')
   })

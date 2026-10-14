@@ -177,6 +177,7 @@ export const parseMap = (raw: unknown): ExperienceMap => {
     points,
   }
 
+  if (map.settings.presentation === 'local' && start.length > 1) issues.push('a "local" map needs exactly one start point')
   checkReferences(map, issues)
   if (issues.length > 0) throw new MapValidationError(issues)
 

@@ -2,17 +2,17 @@ import type { PlayerStatus } from '../player/useSoundCloudPlayer'
 
 interface PlayerControlsProps {
   status: PlayerStatus
-  canGoBack: boolean
+  backTitle: string | null
   onBack: () => void
   onTogglePause: () => void
   onReplay: () => void
 }
 
-export function PlayerControls({ status, canGoBack, onBack, onTogglePause, onReplay }: PlayerControlsProps) {
+export function PlayerControls({ status, backTitle, onBack, onTogglePause, onReplay }: PlayerControlsProps) {
   return (
     <div className="controls">
-      {canGoBack && (
-        <button className="icon-button" aria-label="Revenir au passage précédent" onClick={onBack}>
+      {backTitle !== null && (
+        <button className="icon-button" aria-label={`Revenir à ${backTitle}`} title={backTitle} onClick={onBack}>
           «
         </button>
       )}

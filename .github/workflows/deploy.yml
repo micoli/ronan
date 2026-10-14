@@ -28,7 +28,7 @@ jobs:
       - run: npm run build
         env:
           BASE_PATH: /ronan/
-          VITE_STORY_URL: ${{ vars.STORY_URL }}
+          VITE_MAP_URL: ${{ vars.MAP_URL }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

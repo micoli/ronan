@@ -1,61 +1,87 @@
 import { Canvas, useThree } from '@react-three/fiber'
-import type { RefObject } from 'react'
-import type { Choice } from '../story/types'
+import { useRef, type RefObject } from 'react'
 import type { Quality } from '../hooks/capabilities'
 import type { PlaybackClock } from '../player/useSoundCloudPlayer'
+import type { Branch } from '../session/session'
 import { ChoiceBranch } from './ChoiceBranch'
-import { layoutBranches } from './layoutBranches'
+import { LabelProjector } from './LabelProjector'
+import { layoutBranches, type Vec3 } from './layoutBranches'
 import { NodeCore } from './NodeCore'
 import { PathTrail } from './PathTrail'
 import { Starfield } from './Starfield'
 import { WaveformRing } from './WaveformRing'
 
 interface SceneProps {
-  path: string[]
-  choices: Choice[]
+  trail: string[]
+  branches: Branch[]
   samples: number[] | null
   clockRef: RefObject<PlaybackClock>
   quality: Quality
-  onChoose: (to: string) => void
+  onOpen: (pointId: string) => void
 }
 
-const CORE_POSITION: [number, number, number] = [0, -2.1, 0]
+const CORE_POSITION: Vec3 = [0, -2.1, 0]
+const LABEL_LIFT = 0.35
+const STAGGER_SECONDS = 0.15
+const GROW_SECONDS = 0.8
 
-function Branches({ choices, onChoose }: Pick<SceneProps, 'choices' | 'onChoose'>) {
+interface BranchesProps {
+  branches: Branch[]
+  labels: RefObject<Map<string, HTMLElement>>
+}
+
+function Branches({ branches, labels }: BranchesProps) {
   const aspect = useThree((state) => state.size.width / state.size.height)
-  const targets = layoutBranches(choices.length, aspect)
+  const targets = layoutBranches(branches.length, aspect)
 
   return (
-    <group position={CORE_POSITION}>
-      {choices.map((choice, index) => (
-        <ChoiceBranch
-          key={`${choice.to}-${choice.label}`}
-          label={choice.label}
-          target={targets[index]}
-          delay={index * 0.15}
-          onChoose={() => onChoose(choice.to)}
-        />
-      ))}
-    </group>
+    <>
+      <group position={CORE_POSITION}>
+        {branches.map((branch, index) => (
+          <ChoiceBranch key={branch.id} target={targets[index]} delay={index * STAGGER_SECONDS} />
+        ))}
+      </group>
+      <LabelProjector ids={branches.map((branch) => branch.id)} targets={targets} origin={CORE_POSITION} labels={labels} lift={LABEL_LIFT} />
+    </>
   )
 }
 
-export function Scene({ path, choices, samples, clockRef, quality, onChoose }: SceneProps) {
+export function Scene({ trail, branches, samples, clockRef, quality, onOpen }: SceneProps) {
+  const labels = useRef(new Map<string, HTMLElement>())
+
   return (
-    <Canvas
-      className="scene"
-      dpr={[1, quality.maxDpr]}
-      gl={{ antialias: quality.maxDpr > 1.5, alpha: false }}
-      camera={{ position: [0, 0, 7.5], fov: 50 }}
-    >
-      <color attach="background" args={['#000000']} />
-      <Starfield count={quality.stars} />
-      <group position={CORE_POSITION}>
-        <PathTrail path={path} />
-        <NodeCore />
-        <WaveformRing samples={samples} clockRef={clockRef} segments={quality.ringSegments} />
-      </group>
-      <Branches choices={choices} onChoose={onChoose} />
-    </Canvas>
+    <>
+      <Canvas
+        className="scene"
+        dpr={[1, quality.maxDpr]}
+        gl={{ antialias: quality.maxDpr > 1.5, alpha: false }}
+        camera={{ position: [0, 0, 7.5], fov: 50 }}
+      >
+        <color attach="background" args={['#000000']} />
+        <Starfield count={quality.stars} />
+        <group position={CORE_POSITION}>
+          <PathTrail path={trail} />
+          <NodeCore />
+          <WaveformRing samples={samples} clockRef={clockRef} segments={quality.ringSegments} />
+        </group>
+        <Branches branches={branches} labels={labels} />
+      </Canvas>
+      <div className="branch-labels">
+        {branches.map((branch, index) => (
+          <button
+            key={branch.id}
+            ref={(element) => {
+              if (element) labels.current.set(branch.id, element)
+              else labels.current.delete(branch.id)
+            }}
+            className="branch-label"
+            style={{ animationDelay: `${index * STAGGER_SECONDS + GROW_SECONDS * 0.7}s` }}
+            onClick={() => onOpen(branch.id)}
+          >
+            {branch.label}
+          </button>
+        ))}
+      </div>
+    </>
   )
 }

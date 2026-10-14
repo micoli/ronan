@@ -1,17 +1,17 @@
-import type { Choice } from '../story/types'
+import type { Branch } from '../session/session'
 
 interface ChoiceListProps {
-  choices: Choice[]
-  onChoose: (to: string) => void
+  branches: Branch[]
+  onOpen: (pointId: string) => void
 }
 
-export function ChoiceList({ choices, onChoose }: ChoiceListProps) {
+export function ChoiceList({ branches, onOpen }: ChoiceListProps) {
   return (
     <ul className="choice-list">
-      {choices.map((choice) => (
-        <li key={`${choice.to}-${choice.label}`}>
-          <button className="button" onClick={() => onChoose(choice.to)}>
-            {choice.label}
+      {branches.map((branch) => (
+        <li key={branch.id}>
+          <button className="button" onClick={() => onOpen(branch.id)}>
+            {branch.label}
           </button>
         </li>
       ))}

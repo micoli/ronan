@@ -1,12 +1,12 @@
 interface TranscriptPanelProps {
-  transcript: string
+  text: string
 }
 
-export function TranscriptPanel({ transcript }: TranscriptPanelProps) {
+export function TranscriptPanel({ text }: TranscriptPanelProps) {
   return (
     <details className="transcript">
-      <summary>Transcription</summary>
-      <p>{transcript}</p>
+      <summary>Texte</summary>
+      <p>{text}</p>
     </details>
   )
 }

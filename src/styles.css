@@ -206,7 +206,20 @@ summary:focus-visible {
   padding: 1rem 1rem max(1.5rem, env(safe-area-inset-bottom));
 }
 
+.branch-labels {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 .branch-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-9999px, -9999px);
+  pointer-events: auto;
   width: 10rem;
   max-width: 42vw;
   padding: 0.5rem 0.6rem;

@@ -1,19 +1,17 @@
-import { Html, Line } from '@react-three/drei'
+import { Line } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import { MathUtils, QuadraticBezierCurve3, Vector3, type Group } from 'three'
 import type { Vec3 } from './layoutBranches'
 
 interface ChoiceBranchProps {
-  label: string
   target: Vec3
   delay: number
-  onChoose: () => void
 }
 
 const GROW_SECONDS = 0.8
 
-export function ChoiceBranch({ label, target, delay, onChoose }: ChoiceBranchProps) {
+export function ChoiceBranch({ target, delay }: ChoiceBranchProps) {
   const group = useRef<Group>(null)
   const age = useRef(-delay)
 
@@ -25,8 +23,7 @@ export function ChoiceBranch({ label, target, delay, onChoose }: ChoiceBranchPro
 
   useFrame((_, delta) => {
     age.current += delta
-    const growth = MathUtils.clamp(age.current / GROW_SECONDS, 0, 1)
-    group.current?.scale.setScalar(growth)
+    group.current?.scale.setScalar(MathUtils.clamp(age.current / GROW_SECONDS, 0, 1))
   })
 
   return (
@@ -36,11 +33,6 @@ export function ChoiceBranch({ label, target, delay, onChoose }: ChoiceBranchPro
         <octahedronGeometry args={[0.1, 0]} />
         <meshBasicMaterial color="#ffffff" wireframe />
       </mesh>
-      <Html position={[target[0], target[1] + 0.35, target[2]]} center zIndexRange={[20, 0]}>
-        <button className="branch-label" style={{ animationDelay: `${delay + GROW_SECONDS * 0.7}s` }} onClick={onChoose}>
-          {label}
-        </button>
-      </Html>
     </group>
   )
 }

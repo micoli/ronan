@@ -1,0 +1,863 @@
+{
+  "title": "Cartographie de test (30 points)",
+  "settings": {
+    "presentation": "full",
+    "unavailable": "dimmed"
+  },
+  "start": [
+    "v1",
+    "l1"
+  ],
+  "families": {
+    "voix": {
+      "label": "Voix",
+      "color": "#ffd166",
+      "shape": "circle"
+    },
+    "lieu": {
+      "label": "Lieux",
+      "color": "#4cc9f0",
+      "shape": "diamond"
+    },
+    "machine": {
+      "label": "Machines",
+      "color": "#c77dff",
+      "shape": "square"
+    },
+    "nature": {
+      "label": "Nature",
+      "color": "#80ed99",
+      "shape": "triangle"
+    },
+    "intime": {
+      "label": "Intime",
+      "color": "#ff7b9c",
+      "shape": "cross"
+    }
+  },
+  "points": {
+    "v1": {
+      "title": "Murmure du quai",
+      "families": [
+        "voix"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "v2"
+        },
+        {
+          "to": "v3",
+          "label": "raccourci"
+        }
+      ],
+      "text": "Fragment de recherche — Murmure du quai. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "v2": {
+      "title": "Message oublié",
+      "families": [
+        "voix"
+      ],
+      "capsules": [
+        {
+          "title": "Message oublié · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        },
+        {
+          "title": "Message oublié · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "v3"
+        },
+        {
+          "to": "v1"
+        },
+        {
+          "to": "v5",
+          "unless": [
+            "v4"
+          ],
+          "label": "à travers"
+        }
+      ]
+    },
+    "v3": {
+      "title": "Chœur d'enfants",
+      "families": [
+        "voix"
+      ],
+      "capsules": [
+        {
+          "title": "Chœur d'enfants · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        },
+        {
+          "title": "Chœur d'enfants · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        },
+        {
+          "title": "Chœur d'enfants · prise 3",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "v4"
+        },
+        {
+          "to": "v2"
+        },
+        {
+          "to": "l3",
+          "label": "vers lieu"
+        },
+        {
+          "to": "i3",
+          "label": "vers intime"
+        }
+      ],
+      "hinge": true
+    },
+    "v4": {
+      "title": "Voix de la radio",
+      "families": [
+        "voix"
+      ],
+      "capsules": [
+        {
+          "title": "Voix de la radio · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        },
+        {
+          "title": "Voix de la radio · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "v5"
+        },
+        {
+          "to": "v3"
+        },
+        {
+          "to": "v6"
+        }
+      ],
+      "text": "Fragment de recherche — Voix de la radio. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "v5": {
+      "title": "Appel manqué",
+      "families": [
+        "voix"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "v6"
+        },
+        {
+          "to": "v4"
+        },
+        {
+          "to": "i2",
+          "label": "souvenir"
+        }
+      ]
+    },
+    "v6": {
+      "title": "Dernier mot",
+      "families": [
+        "voix"
+      ],
+      "capsules": [
+        {
+          "title": "Dernier mot · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        },
+        {
+          "title": "Dernier mot · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "v5"
+        }
+      ],
+      "final": true
+    },
+    "l1": {
+      "title": "Gare de nuit",
+      "families": [
+        "lieu"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "l2"
+        },
+        {
+          "to": "l3",
+          "label": "raccourci"
+        }
+      ],
+      "text": "Fragment de recherche — Gare de nuit. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "l2": {
+      "title": "Escalier de service",
+      "families": [
+        "lieu"
+      ],
+      "capsules": [
+        {
+          "title": "Escalier de service · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        },
+        {
+          "title": "Escalier de service · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "l3"
+        },
+        {
+          "to": "l1"
+        },
+        {
+          "to": "l5",
+          "unless": [
+            "l4"
+          ],
+          "label": "à travers"
+        }
+      ]
+    },
+    "l3": {
+      "title": "Salle des machines",
+      "families": [
+        "lieu"
+      ],
+      "capsules": [
+        {
+          "title": "Salle des machines · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        },
+        {
+          "title": "Salle des machines · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        },
+        {
+          "title": "Salle des machines · prise 3",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "l4"
+        },
+        {
+          "to": "l2"
+        },
+        {
+          "to": "m3",
+          "label": "vers machine"
+        },
+        {
+          "to": "v3",
+          "label": "vers voix"
+        }
+      ],
+      "hinge": true
+    },
+    "l4": {
+      "title": "Toit-terrasse",
+      "families": [
+        "lieu",
+        "voix"
+      ],
+      "capsules": [
+        {
+          "title": "Toit-terrasse · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        },
+        {
+          "title": "Toit-terrasse · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "l5"
+        },
+        {
+          "to": "l3"
+        },
+        {
+          "to": "l6"
+        }
+      ],
+      "text": "Fragment de recherche — Toit-terrasse. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "l5": {
+      "title": "Tunnel du métro",
+      "families": [
+        "lieu"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "l6"
+        },
+        {
+          "to": "l4"
+        },
+        {
+          "to": "v2",
+          "label": "souvenir"
+        }
+      ]
+    },
+    "l6": {
+      "title": "Rue vide",
+      "families": [
+        "lieu"
+      ],
+      "capsules": [
+        {
+          "title": "Rue vide · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        },
+        {
+          "title": "Rue vide · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "l5"
+        }
+      ],
+      "final": true
+    },
+    "m1": {
+      "title": "Ventilateur",
+      "families": [
+        "machine"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "m2"
+        },
+        {
+          "to": "m3",
+          "label": "raccourci"
+        }
+      ],
+      "text": "Fragment de recherche — Ventilateur. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "m2": {
+      "title": "Disque dur",
+      "families": [
+        "machine"
+      ],
+      "capsules": [
+        {
+          "title": "Disque dur · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        },
+        {
+          "title": "Disque dur · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "m3"
+        },
+        {
+          "to": "m1"
+        },
+        {
+          "to": "m5",
+          "unless": [
+            "m4"
+          ],
+          "label": "à travers"
+        }
+      ]
+    },
+    "m3": {
+      "title": "Moteur au ralenti",
+      "families": [
+        "machine"
+      ],
+      "capsules": [
+        {
+          "title": "Moteur au ralenti · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        },
+        {
+          "title": "Moteur au ralenti · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        },
+        {
+          "title": "Moteur au ralenti · prise 3",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "m4"
+        },
+        {
+          "to": "m2"
+        },
+        {
+          "to": "n3",
+          "label": "vers nature"
+        },
+        {
+          "to": "l3",
+          "label": "vers lieu"
+        }
+      ],
+      "hinge": true
+    },
+    "m4": {
+      "title": "Néon qui grésille",
+      "families": [
+        "machine"
+      ],
+      "capsules": [
+        {
+          "title": "Néon qui grésille · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        },
+        {
+          "title": "Néon qui grésille · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "m5"
+        },
+        {
+          "to": "m3"
+        },
+        {
+          "to": "m6"
+        }
+      ],
+      "text": "Fragment de recherche — Néon qui grésille. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "m5": {
+      "title": "Imprimante",
+      "families": [
+        "machine",
+        "intime"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "m6"
+        },
+        {
+          "to": "m4"
+        },
+        {
+          "to": "l2",
+          "label": "souvenir"
+        }
+      ]
+    },
+    "m6": {
+      "title": "Mise en veille",
+      "families": [
+        "machine"
+      ],
+      "capsules": [
+        {
+          "title": "Mise en veille · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        },
+        {
+          "title": "Mise en veille · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "m5"
+        }
+      ],
+      "final": true
+    },
+    "n1": {
+      "title": "Pluie sur zinc",
+      "families": [
+        "nature"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "n2"
+        },
+        {
+          "to": "n3",
+          "label": "raccourci"
+        }
+      ],
+      "text": "Fragment de recherche — Pluie sur zinc. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "n2": {
+      "title": "Corbeaux",
+      "families": [
+        "nature",
+        "lieu"
+      ],
+      "capsules": [
+        {
+          "title": "Corbeaux · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        },
+        {
+          "title": "Corbeaux · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "n3"
+        },
+        {
+          "to": "n1"
+        },
+        {
+          "to": "n5",
+          "unless": [
+            "n4"
+          ],
+          "label": "à travers"
+        }
+      ]
+    },
+    "n3": {
+      "title": "Rivière",
+      "families": [
+        "nature"
+      ],
+      "capsules": [
+        {
+          "title": "Rivière · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        },
+        {
+          "title": "Rivière · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        },
+        {
+          "title": "Rivière · prise 3",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "n4"
+        },
+        {
+          "to": "n2"
+        },
+        {
+          "to": "i3",
+          "label": "vers intime"
+        },
+        {
+          "to": "m3",
+          "label": "vers machine"
+        }
+      ],
+      "hinge": true
+    },
+    "n4": {
+      "title": "Vent dans les pins",
+      "families": [
+        "nature"
+      ],
+      "capsules": [
+        {
+          "title": "Vent dans les pins · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        },
+        {
+          "title": "Vent dans les pins · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "n5"
+        },
+        {
+          "to": "n3"
+        },
+        {
+          "to": "n6"
+        }
+      ],
+      "text": "Fragment de recherche — Vent dans les pins. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "n5": {
+      "title": "Orage lointain",
+      "families": [
+        "nature"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "n6"
+        },
+        {
+          "to": "n4"
+        },
+        {
+          "to": "m2",
+          "label": "souvenir"
+        }
+      ]
+    },
+    "n6": {
+      "title": "Aube",
+      "families": [
+        "nature"
+      ],
+      "capsules": [
+        {
+          "title": "Aube · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        },
+        {
+          "title": "Aube · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "n5"
+        }
+      ],
+      "final": true
+    },
+    "i1": {
+      "title": "Respiration",
+      "families": [
+        "intime"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "i2"
+        },
+        {
+          "to": "i3",
+          "label": "raccourci"
+        }
+      ],
+      "text": "Fragment de recherche — Respiration. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "i2": {
+      "title": "Pas dans le couloir",
+      "families": [
+        "intime"
+      ],
+      "capsules": [
+        {
+          "title": "Pas dans le couloir · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        },
+        {
+          "title": "Pas dans le couloir · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "i3"
+        },
+        {
+          "to": "i1"
+        },
+        {
+          "to": "i5",
+          "unless": [
+            "i4"
+          ],
+          "label": "à travers"
+        }
+      ]
+    },
+    "i3": {
+      "title": "Porte qui claque",
+      "families": [
+        "intime"
+      ],
+      "capsules": [
+        {
+          "title": "Porte qui claque · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        },
+        {
+          "title": "Porte qui claque · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        },
+        {
+          "title": "Porte qui claque · prise 3",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "i4"
+        },
+        {
+          "to": "i2"
+        },
+        {
+          "to": "v3",
+          "label": "vers voix"
+        },
+        {
+          "to": "n3",
+          "label": "vers nature"
+        }
+      ],
+      "hinge": true
+    },
+    "i4": {
+      "title": "Bouilloire",
+      "families": [
+        "intime"
+      ],
+      "capsules": [
+        {
+          "title": "Bouilloire · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        },
+        {
+          "title": "Bouilloire · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "i5"
+        },
+        {
+          "to": "i3"
+        },
+        {
+          "to": "i6",
+          "requires": [
+            "v3",
+            "n3"
+          ],
+          "label": "seulement après la voix et la pluie"
+        }
+      ],
+      "text": "Fragment de recherche — Bouilloire. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "i5": {
+      "title": "Rire étouffé",
+      "families": [
+        "intime"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "i6",
+          "requires": [
+            "v3",
+            "n3"
+          ],
+          "label": "seulement après la voix et la pluie"
+        },
+        {
+          "to": "i4"
+        },
+        {
+          "to": "n2",
+          "label": "souvenir"
+        }
+      ]
+    },
+    "i6": {
+      "title": "Silence de fin",
+      "families": [
+        "intime"
+      ],
+      "capsules": [
+        {
+          "title": "Silence de fin · prise 1",
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        },
+        {
+          "title": "Silence de fin · prise 2",
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "i5"
+        }
+      ],
+      "final": true
+    }
+  }
+}
