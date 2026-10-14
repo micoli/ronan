@@ -10,6 +10,8 @@ import { useSession } from './session/useSession'
 import type { Story } from './story/types'
 import { useStoryLoader } from './story/useStoryLoader'
 
+const REVEAL_DELAY_MS = 3000
+
 interface ReaderProps {
   story: Story
 }
@@ -22,8 +24,12 @@ function Reader({ story }: ReaderProps) {
   const quality = useMemo(detectQuality, [])
 
   useEffect(() => {
-    if (player.status === 'finished' && session.currentNodeId !== null) revealChoices()
-  }, [player.status, session.currentNodeId, revealChoices])
+    if (session.currentNodeId === null || session.choicesRevealed) return
+    if (player.status === 'finished') return revealChoices()
+    if (player.status !== 'playing') return
+    const timer = setTimeout(revealChoices, REVEAL_DELAY_MS)
+    return () => clearTimeout(timer)
+  }, [player.status, session.currentNodeId, session.choicesRevealed, revealChoices])
 
   const handleStart = () => {
     start()
