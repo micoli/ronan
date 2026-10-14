@@ -30,8 +30,9 @@ export function MapPoint({ point, position, families, status, current, emphasise
   const color = status === 'closed' ? CLOSED_COLOR : (families[0]?.color ?? '#ffffff')
   const size = BASE_SIZE * (point.hinge ? 1.3 : 1) * (current ? 1.6 : 1) * (emphasised ? 1.5 : 1)
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock }, delta) => {
     if (!group.current) return
+    if (detailed) group.current.rotation.y += delta * (current ? 0.6 : 0.3)
     const pulse = status === 'reachable' ? 1 + 0.2 * Math.sin(clock.elapsedTime * 3 + position[0]) : 1
     group.current.scale.setScalar((detailed ? size : DOT_SIZE) * pulse)
   })
@@ -41,7 +42,7 @@ export function MapPoint({ point, position, families, status, current, emphasise
       <group position={position}>
         <group ref={group}>
           {detailed ? (
-            <PointShape shape={families[0]?.shape ?? 'circle'} color={color} filled={status === 'visited'} opacity={OPACITY[status]} />
+            <PointShape shape={families[0]?.shape ?? 'globe'} color={color} core={status === 'visited'} opacity={OPACITY[status]} />
           ) : (
             <mesh>
               <sphereGeometry args={[1, 6, 6]} />

@@ -15,7 +15,7 @@ export class MapValidationError extends Error {
   }
 }
 
-const SHAPES: FamilyShape[] = ['circle', 'diamond', 'triangle', 'square', 'cross']
+const SHAPES: FamilyShape[] = ['globe', 'octahedron', 'pyramid', 'cube', 'polyhedron']
 const HEX_COLOR = /^#[0-9a-f]{6}$/i
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>

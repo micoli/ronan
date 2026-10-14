@@ -12,27 +12,27 @@
     "voix": {
       "label": "Voix",
       "color": "#ffd166",
-      "shape": "circle"
+      "shape": "globe"
     },
     "lieu": {
       "label": "Lieux",
       "color": "#4cc9f0",
-      "shape": "diamond"
+      "shape": "octahedron"
     },
     "machine": {
       "label": "Machines",
       "color": "#c77dff",
-      "shape": "square"
+      "shape": "cube"
     },
     "nature": {
       "label": "Nature",
       "color": "#80ed99",
-      "shape": "triangle"
+      "shape": "pyramid"
     },
     "intime": {
       "label": "Intime",
       "color": "#ff7b9c",
-      "shape": "cross"
+      "shape": "polyhedron"
     }
   },
   "points": {

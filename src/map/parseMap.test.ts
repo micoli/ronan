@@ -21,7 +21,7 @@ describe('parseMap', () => {
   it('accepts a map with families, hinge, conditions and defaults', () => {
     const map = parseMap({
       start: ['a'],
-      families: { mem: { label: 'Mémoire', color: '#aabbcc', shape: 'circle' } },
+      families: { mem: { label: 'Mémoire', color: '#aabbcc', shape: 'globe' } },
       points: {
         a: point({ families: ['mem'], hinge: true, connections: [{ to: 'b', label: 'go', requires: [], unless: ['c'] }] }),
         b: point({ connections: [{ to: 'c' }] }),

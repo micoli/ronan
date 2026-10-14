@@ -71,7 +71,7 @@ export function ConstellationScene({ map, statuses, currentId, branches, samples
         className="scene"
         dpr={[1, quality.maxDpr]}
         gl={{ antialias: quality.maxDpr > 1.5, alpha: false }}
-        camera={{ position: [0, 1.5, window.innerWidth < window.innerHeight ? 14 : 9.5], fov: 50 }}
+        camera={{ position: [0, 1.5, window.innerWidth < window.innerHeight ? 14 : 11], fov: 50 }}
       >
         <color attach="background" args={['#000000']} />
         <Starfield count={quality.stars} />

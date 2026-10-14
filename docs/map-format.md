@@ -8,8 +8,8 @@ Une expérience est un unique fichier JSON (typiquement hébergé dans un gist o
   "settings": { "presentation": "full", "unavailable": "dimmed" },
   "start": ["v1", "l1"],
   "families": {
-    "voix": { "label": "Voix", "color": "#ffd166", "shape": "circle" },
-    "lieu": { "label": "Lieux", "color": "#4cc9f0", "shape": "diamond" }
+    "voix": { "label": "Voix", "color": "#ffd166", "shape": "globe" },
+    "lieu": { "label": "Lieux", "color": "#4cc9f0", "shape": "octahedron" }
   },
   "points": {
     "v1": {
@@ -40,7 +40,7 @@ Une expérience est un unique fichier JSON (typiquement hébergé dans un gist o
 | `settings.presentation` | `"full"` \| `"local"` | non (`full`) | `full` : toute la carte visible. `local` : seulement le Point courant et ses Connections (histoire à choix). Une Map `local` n'a qu'un seul `start`. |
 | `settings.unavailable` | `"dimmed"` \| `"hidden"` | non (`dimmed`) | Rendu des Points fermés |
 | `start` | string \| string[] | oui | Point(s) d'entrée accessibles au début |
-| `families` | objet | non | Table `id → { label, color (#rrggbb), shape }` ; `shape` ∈ `circle`, `diamond`, `triangle`, `square`, `cross` |
+| `families` | objet | non | Table `id → { label, color (#rrggbb), shape }` ; `shape` ∈ `globe`, `octahedron`, `pyramid`, `cube`, `polyhedron` |
 | `points` | objet | oui | Table `id → Point` |
 
 ## Point

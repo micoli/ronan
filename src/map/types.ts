@@ -1,6 +1,6 @@
 export type Presentation = 'local' | 'full'
 export type UnavailableStyle = 'hidden' | 'dimmed'
-export type FamilyShape = 'circle' | 'diamond' | 'triangle' | 'square' | 'cross'
+export type FamilyShape = 'globe' | 'octahedron' | 'pyramid' | 'cube' | 'polyhedron'
 
 export interface Capsule {
   title?: string
