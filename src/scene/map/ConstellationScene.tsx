@@ -20,6 +20,7 @@ interface ConstellationSceneProps {
   statuses: Record<string, PointStatus>
   currentId: string | null
   branches: Branch[]
+  openable: ReadonlySet<string>
   samples: number[] | null
   clockRef: RefObject<PlaybackClock>
   quality: Quality
@@ -32,7 +33,7 @@ const DEPTH_SCALE = 0.45
 const CENTER: [number, number, number] = [0, 0, 0]
 const HALO_SCALE = 0.3
 
-export function ConstellationScene({ map, statuses, currentId, branches, samples, clockRef, quality, highlightId, onOpen }: ConstellationSceneProps) {
+export function ConstellationScene({ map, statuses, currentId, branches, openable, samples, clockRef, quality, highlightId, onOpen }: ConstellationSceneProps) {
   const labels = useRef(new Map<string, HTMLElement>())
   const controls = useRef<ElementRef<typeof OrbitControls>>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
@@ -57,12 +58,12 @@ export function ConstellationScene({ map, statuses, currentId, branches, samples
       Object.keys(map.points).map((id) => ({
         id,
         position: positions[id],
-        interactive: statuses[id] === 'reachable' || statuses[id] === 'visited',
+        interactive: openable.has(id),
       })),
-    [map, positions, statuses],
+    [map, positions, openable],
   )
 
-  const isHidden = (id: string) => map.settings.unavailable === 'hidden' && statuses[id] === 'closed'
+  const isHidden = (id: string) => statuses[id] === 'hidden' || (map.settings.unavailable === 'hidden' && statuses[id] === 'closed')
   const currentPosition = currentId ? positions[currentId] : CENTER
 
   return (
@@ -121,7 +122,7 @@ export function ConstellationScene({ map, statuses, currentId, branches, samples
               else labels.current.delete(item.id)
             }}
             className="branch-label"
-            disabled={statuses[item.id] !== 'reachable' && statuses[item.id] !== 'visited'}
+            disabled={!openable.has(item.id)}
             onClick={() => onOpen(item.id)}
           >
             {item.label}

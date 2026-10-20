@@ -73,3 +73,52 @@ describe('isExplorationFinished', () => {
     expect(isExplorationFinished(map, journey('a'), 'a')).toBe(false)
   })
 })
+
+describe('reachablePoints with free navigation', () => {
+  const freeMap = parseMap({
+    settings: { navigation: 'free' },
+    start: ['a'],
+    points: {
+      a: point([{ to: 'b' }]),
+      b: point([{ to: 'c' }, { to: 'e', unless: ['d'] }]),
+      c: point([{ to: 'd' }]),
+      d: point(),
+      e: point(),
+    },
+  })
+
+  it('lets the visitor jump to any unvisited point', () => {
+    expect([...reachablePoints(freeMap, journey('a'))].sort()).toEqual(['b', 'c', 'd', 'e'])
+  })
+
+  it('still excludes points closed by an unless rule', () => {
+    expect([...reachablePoints(freeMap, journey('a', 'd'))].sort()).toEqual(['b', 'c'])
+  })
+})
+
+describe('reachablePoints with story navigation', () => {
+  const storyMap = parseMap({
+    settings: { navigation: 'story' },
+    start: ['s1', 's2'],
+    points: {
+      s1: point([{ to: 'a' }, { to: 'b' }]),
+      s2: point([{ to: 'b' }]),
+      a: point([{ to: 'c' }]),
+      b: point([{ to: 'c' }]),
+      c: point(),
+    },
+  })
+
+  it('offers every start point at first', () => {
+    expect([...reachablePoints(storyMap, journey())].sort()).toEqual(['s1', 's2'])
+  })
+
+  it('offers only the destinations of the latest point', () => {
+    expect([...reachablePoints(storyMap, journey('s1'))].sort()).toEqual(['a', 'b'])
+    expect([...reachablePoints(storyMap, journey('s1', 'a'))]).toEqual(['c'])
+  })
+
+  it('does not reopen the other start points or the siblings already passed over', () => {
+    expect([...reachablePoints(storyMap, journey('s2', 'b'))]).toEqual(['c'])
+  })
+})

@@ -1,6 +1,6 @@
 import { useFrame } from '@react-three/fiber'
 import { useRef } from 'react'
-import type { Group } from 'three'
+import { Color, type Group } from 'three'
 import type { PointStatus } from '../../map/availability'
 import type { Family, Point } from '../../map/types'
 import type { Vec3 } from '../layoutBranches'
@@ -21,13 +21,17 @@ const BASE_SIZE = 0.17
 const DOT_SIZE = 0.055
 const UNDISCOVERED_STAR_RADIUS = 0.3
 const CLOSED_COLOR = '#808080'
+const PASSED_GREYING = 0.55
 
-const OPACITY: Record<PointStatus, number> = { visited: 1, reachable: 1, unreached: 0.35, closed: 0.12 }
+const greyed = (hex: string): string => `#${new Color(hex).lerp(new Color(CLOSED_COLOR), PASSED_GREYING).getHexString()}`
+
+const OPACITY: Record<PointStatus, number> = { visited: 1, reachable: 1, unreached: 0.35, closed: 0.12, hidden: 0, passed: 0.5 }
 
 export function MapPoint({ point, position, families, status, current, emphasised }: MapPointProps) {
   const group = useRef<Group>(null)
-  const detailed = status === 'visited' || status === 'reachable' || emphasised
-  const color = status === 'closed' ? CLOSED_COLOR : (families[0]?.color ?? '#ffffff')
+  const detailed = status === 'visited' || status === 'reachable' || status === 'passed' || emphasised
+  const familyColor = families[0]?.color ?? '#ffffff'
+  const color = status === 'closed' ? CLOSED_COLOR : status === 'passed' ? greyed(familyColor) : familyColor
   const size = BASE_SIZE * (point.hinge ? 1.3 : 1) * (current ? 1.6 : 1) * (emphasised ? 1.5 : 1)
 
   useFrame(({ clock }, delta) => {

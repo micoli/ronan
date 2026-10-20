@@ -32,8 +32,9 @@ describe.each(mapFiles)('sample map %s', (file) => {
   })
 
   it('can be fully explored by visiting whatever becomes reachable', () => {
+    const connectedMap = { ...map, settings: { ...map.settings, navigation: 'connected' as const } }
     const journey = new Set<string>()
-    for (let next = reachablePoints(map, journey); next.size > 0; next = reachablePoints(map, journey)) {
+    for (let next = reachablePoints(connectedMap, journey); next.size > 0; next = reachablePoints(connectedMap, journey)) {
       next.forEach((id) => journey.add(id))
     }
     expect([...journey].sort()).toEqual(Object.keys(map.points).sort())

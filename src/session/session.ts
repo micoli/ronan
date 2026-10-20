@@ -4,7 +4,6 @@ import type { ExperienceMap } from '../map/types'
 export interface Session {
   started: boolean
   currentPointId: string | null
-  previousPointId: string | null
   journey: string[]
   capsuleIndex: number
   pendingReveal: boolean
@@ -12,7 +11,6 @@ export interface Session {
 
 export interface SavedSession {
   currentPointId: string | null
-  previousPointId: string | null
   journey: string[]
 }
 
@@ -27,7 +25,6 @@ export type SessionAction =
 export const initialSession: Session = {
   started: false,
   currentPointId: null,
-  previousPointId: null,
   journey: [],
   capsuleIndex: 0,
   pendingReveal: false,
@@ -43,13 +40,36 @@ const revealedJourney = (session: Session): Set<string> => {
   return new Set(session.journey.filter((id) => id !== hidden))
 }
 
+export const previousPointOf = (session: Session): string | null => {
+  const index = session.currentPointId === null ? -1 : session.journey.indexOf(session.currentPointId)
+  return index > 0 ? session.journey[index - 1] : null
+}
+
+const nextPointOf = (session: Session): string | null => {
+  const index = session.currentPointId === null ? -1 : session.journey.indexOf(session.currentPointId)
+  return index >= 0 && index < session.journey.length - 1 ? session.journey[index + 1] : null
+}
+
+const isReplaying = (session: Session): boolean => nextPointOf(session) !== null
+
+const choicesOf = (map: ExperienceMap, session: Session): Set<string> => {
+  if (map.settings.navigation !== 'story') return reachablePoints(map, revealedJourney(session))
+  return session.pendingReveal ? new Set() : reachablePoints(map, new Set(session.journey))
+}
+
 export const openablePointIds = (map: ExperienceMap, session: Session): Set<string> => {
   const openable = new Set<string>()
-  if (session.previousPointId) openable.add(session.previousPointId)
+  const previous = previousPointOf(session)
+  if (previous) openable.add(previous)
+
+  const next = nextPointOf(session)
+  if (next) {
+    openable.add(next)
+    return openable
+  }
 
   if (map.settings.presentation === 'full') {
-    session.journey.forEach((id) => openable.add(id))
-    reachablePoints(map, revealedJourney(session)).forEach((id) => openable.add(id))
+    choicesOf(map, session).forEach((id) => openable.add(id))
     return openable
   }
 
@@ -58,27 +78,48 @@ export const openablePointIds = (map: ExperienceMap, session: Session): Set<stri
     return openable
   }
   if (session.pendingReveal) return openable
-  openableConnections(map, session.currentPointId, new Set(session.journey)).forEach((connection) => openable.add(connection.to))
+  openableConnections(map, session.currentPointId, new Set(session.journey))
+    .filter((connection) => !session.journey.includes(connection.to))
+    .forEach((connection) => openable.add(connection.to))
   return openable
 }
 
+const passedChoicesOf = (map: ExperienceMap, session: Session): string[] => {
+  const passed = session.journey.length === 0 ? [] : map.start.filter((id) => !session.journey.includes(id))
+  session.journey.slice(0, -1).forEach((id, index) => {
+    const journeyThen = new Set(session.journey.slice(0, index + 1))
+    openableConnections(map, id, journeyThen).forEach((connection) => passed.push(connection.to))
+  })
+  return passed.filter((id) => !session.journey.includes(id))
+}
+
 export const statusesOf = (map: ExperienceMap, session: Session): Record<string, PointStatus> => {
-  const statuses = pointStatuses(map, revealedJourney(session))
+  const isStory = map.settings.navigation === 'story'
+  const statuses = pointStatuses(map, isStory ? new Set(session.journey) : revealedJourney(session))
+  const withholdChoices = isReplaying(session) || (isStory && session.pendingReveal)
+  for (const id of Object.keys(statuses)) {
+    if (statuses[id] === 'reachable' && withholdChoices) statuses[id] = 'unreached'
+    if (isStory && statuses[id] !== 'reachable' && statuses[id] !== 'visited') statuses[id] = 'hidden'
+  }
   session.journey.forEach((id) => (statuses[id] = 'visited'))
+  if (isStory) passedChoicesOf(map, session).forEach((id) => statuses[id] !== 'reachable' && statuses[id] !== 'visited' && (statuses[id] = 'passed'))
   return statuses
 }
 
 export const branchesOf = (map: ExperienceMap, session: Session): Branch[] => {
-  if (map.settings.presentation === 'full') {
-    return [...reachablePoints(map, revealedJourney(session))]
-      .filter((id) => !session.journey.includes(id))
-      .map((id) => ({ id, label: map.points[id].title }))
+  if (session.pendingReveal) return []
+  const next = nextPointOf(session)
+  if (next) return [{ id: next, label: map.points[next].title }]
+  if (session.currentPointId === null) {
+    if (map.settings.presentation !== 'full') return []
+    return map.start.map((id) => ({ id, label: map.points[id].title }))
   }
-  if (session.currentPointId === null || session.pendingReveal) return []
-  return openableConnections(map, session.currentPointId, new Set(session.journey)).map((connection) => ({
-    id: connection.to,
-    label: connection.label ?? map.points[connection.to].title,
-  }))
+  return openableConnections(map, session.currentPointId, new Set(session.journey))
+    .filter((connection) => !session.journey.includes(connection.to))
+    .map((connection) => ({
+      id: connection.to,
+      label: connection.label ?? map.points[connection.to].title,
+    }))
 }
 
 export const createSessionReducer =
@@ -95,7 +136,6 @@ export const createSessionReducer =
         return {
           started: true,
           currentPointId: action.pointId,
-          previousPointId: session.currentPointId !== action.pointId ? session.currentPointId : session.previousPointId,
           journey: isNew ? [...session.journey, action.pointId] : session.journey,
           capsuleIndex: 0,
           pendingReveal: isNew,
@@ -116,14 +156,13 @@ export const createSessionReducer =
 export const toSaved = (session: Session): SavedSession | null =>
   session.journey.length === 0
     ? null
-    : { currentPointId: session.currentPointId, previousPointId: session.previousPointId, journey: session.journey }
+    : { currentPointId: session.currentPointId, journey: session.journey }
 
 const isKnownPointId = (value: unknown, map: ExperienceMap): value is string => typeof value === 'string' && Boolean(map.points[value])
 
 export const isValidSaved = (value: unknown, map: ExperienceMap): value is SavedSession => {
   if (typeof value !== 'object' || value === null) return false
-  const { currentPointId, previousPointId, journey } = value as Partial<SavedSession>
+  const { currentPointId, journey } = value as Partial<SavedSession>
   if (currentPointId !== null && !isKnownPointId(currentPointId, map)) return false
-  if (previousPointId !== null && !isKnownPointId(previousPointId, map)) return false
   return Array.isArray(journey) && journey.every((id) => isKnownPointId(id, map))
 }

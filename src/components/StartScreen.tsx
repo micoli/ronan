@@ -10,7 +10,7 @@ interface StartScreenProps {
 export function StartScreen({ ready, canResume, title, onStart, onResume, onExit }: StartScreenProps) {
   return (
     <main className="screen">
-      <h1 className="title">RONAN</h1>
+      <h1 className="title">ORNAN</h1>
       <p className="mono-dim">{title}</p>
       <div className="actions">
         {canResume && (

@@ -1,4 +1,5 @@
 export type Presentation = 'local' | 'full'
+export type Navigation = 'connected' | 'free' | 'story'
 export type UnavailableStyle = 'hidden' | 'dimmed'
 export type FamilyShape = 'globe' | 'octahedron' | 'pyramid' | 'cube' | 'polyhedron'
 
@@ -38,6 +39,7 @@ export interface Point {
 
 export interface MapSettings {
   presentation: Presentation
+  navigation: Navigation
   unavailable: UnavailableStyle
 }
 

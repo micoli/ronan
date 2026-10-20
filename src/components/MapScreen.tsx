@@ -23,6 +23,7 @@ interface MapScreenProps {
   capsuleIndex: number
   trail: string[]
   branches: Branch[]
+  openable: ReadonlySet<string>
   finished: boolean
   use3d: boolean
   quality: Quality
@@ -41,7 +42,7 @@ interface MapScreenProps {
 }
 
 export function MapScreen(props: MapScreenProps) {
-  const { map, statuses, point, trail, branches, finished, use3d, quality, clockRef, onOpen, onRestart, onExit } = props
+  const { map, statuses, point, trail, branches, openable, finished, use3d, quality, clockRef, onOpen, onRestart, onExit } = props
   const samples = useWaveform(props.waveformUrl)
   const isFull = map.settings.presentation === 'full'
   const drawer = use3d && isFull
@@ -59,6 +60,7 @@ export function MapScreen(props: MapScreenProps) {
               statuses={statuses}
               currentId={point?.id ?? null}
               branches={branches}
+              openable={openable}
               samples={samples}
               clockRef={clockRef}
               quality={quality}

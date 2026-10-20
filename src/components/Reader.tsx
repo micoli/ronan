@@ -3,7 +3,7 @@ import { detectQuality, hasWebGL, usePrefersReducedMotion } from '../hooks/capab
 import { isExplorationFinished } from '../map/availability'
 import type { ExperienceMap } from '../map/types'
 import { useSoundCloudPlayer } from '../player/useSoundCloudPlayer'
-import { statusesOf } from '../session/session'
+import { previousPointOf, statusesOf } from '../session/session'
 import { useSession } from '../session/useSession'
 import { ErrorScreen } from './ErrorScreen'
 import { HiddenPlayerFrame } from './HiddenPlayerFrame'
@@ -66,7 +66,8 @@ export function Reader({ map, experienceId, onExit }: ReaderProps) {
   if (player.status === 'error') return <ErrorScreen message="Le lecteur audio SoundCloud est inaccessible." />
 
   const current = session.currentPointId === null ? null : map.points[session.currentPointId]
-  const previous = session.previousPointId === null ? null : map.points[session.previousPointId]
+  const previousId = previousPointOf(session)
+  const previous = previousId === null ? null : map.points[previousId]
   const trail = session.journey.filter((id) => id !== session.currentPointId)
   const statuses = statusesOf(map, session)
   const finished = !session.pendingReveal && isExplorationFinished(map, new Set(session.journey), session.currentPointId)
@@ -82,6 +83,7 @@ export function Reader({ map, experienceId, onExit }: ReaderProps) {
           capsuleIndex={session.capsuleIndex}
           trail={trail}
           branches={branches}
+          openable={openable}
           finished={finished}
           use3d={webgl && !reducedMotion}
           quality={quality}
@@ -91,7 +93,7 @@ export function Reader({ map, experienceId, onExit }: ReaderProps) {
           clockRef={player.clockRef}
           backTitle={previous?.title ?? null}
           onOpen={handleOpen}
-          onBack={() => session.previousPointId && handleOpen(session.previousPointId)}
+          onBack={() => previousId && handleOpen(previousId)}
           onSelectCapsule={handleSelectCapsule}
           onRestart={restart}
           onExit={onExit}

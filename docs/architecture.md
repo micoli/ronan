@@ -30,7 +30,7 @@ MapScreen ──▶ Scene (3D)  ou  ChoiceList (2D)
 
 ## Choix de conception
 
-- **Journey = ensemble** : l'ordre de visite est conservé (pour la trace) mais seule l'appartenance compte pour les règles (ADR 0003). Le Point précédent est mémorisé à part pour le bouton « retour ».
+- **Journey = ensemble** : l'ordre de visite est conservé (pour la trace) mais seule l'appartenance compte pour les règles (ADR 0003). On peut rejouer le chemin parcouru (Point précédent / suivant dans l'ordre du Journey), mais un Point déjà quitté ne propose que celui vers lequel on est allé ; les nouveaux choix n'existent que sur le Point le plus récent.
 - **Révélation différée** : `pendingReveal` est vrai après l'ouverture d'un Point nouvellement visité. Tant qu'il l'est, les Points rendus accessibles par cette visite sont masqués ; `reveal` est déclenché 3 s après le début de la lecture, ou à la fin de la piste si elle est plus courte, et seulement si la lecture est en cours (la pause annule le minuteur).
 - **Geste utilisateur** : `playTrack` est appelé directement dans les handlers de tap, jamais depuis un effet, pour rester dans la chaîne du geste exigée par les navigateurs mobiles.
 - **Course de chargement** : un compteur (`loadToken`) ignore les callbacks d'un chargement périmé ; un `play()` explicite suit le `load()` car l'auto-lecture du widget est parfois ignorée quand l'URL est déjà chargée.

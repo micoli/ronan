@@ -28,7 +28,7 @@ describe('parseMap', () => {
         c: point({ final: true }),
       },
     })
-    expect(map.settings).toEqual({ presentation: 'full', unavailable: 'dimmed' })
+    expect(map.settings).toEqual({ presentation: 'full', navigation: 'connected', unavailable: 'dimmed' })
     expect(map.points.a.hinge).toBe(true)
     expect(map.points.a.connections[0]).toEqual({ to: 'b', label: 'go', requires: [], unless: ['c'] })
     expect(map.points.b.connections[0].requires).toEqual([])

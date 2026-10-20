@@ -2,8 +2,9 @@ import { reachablePoints } from './availability'
 import type { ExperienceMap } from './types'
 
 export const unexplorablePoints = (map: ExperienceMap): string[] => {
+  const connectedMap = { ...map, settings: { ...map.settings, navigation: 'connected' as const } }
   const journey = new Set<string>()
-  for (let next = reachablePoints(map, journey); next.size > 0; next = reachablePoints(map, journey)) {
+  for (let next = reachablePoints(connectedMap, journey); next.size > 0; next = reachablePoints(connectedMap, journey)) {
     next.forEach((id) => journey.add(id))
   }
   return Object.keys(map.points).filter((id) => !journey.has(id))

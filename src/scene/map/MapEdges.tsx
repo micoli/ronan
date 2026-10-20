@@ -44,7 +44,8 @@ export function MapEdges({ map, positions, statuses }: MapEdgesProps) {
     const color = new Color()
     edges.forEach((edge, i) => {
       const intensity = edgeIntensity(statuses[edge.from], statuses[edge.to])
-      const hidden = map.settings.unavailable === 'hidden' && (statuses[edge.from] === 'closed' || statuses[edge.to] === 'closed')
+      const isGone = (status: PointStatus) => status === 'hidden' || (map.settings.unavailable === 'hidden' && status === 'closed')
+      const hidden = isGone(statuses[edge.from]) || isGone(statuses[edge.to])
       const tint = map.points[edge.from].families[0]
       color.set(tint ? map.families[tint].color : '#ffffff').multiplyScalar(hidden ? 0 : intensity)
       colorAttribute.setXYZ(i * 2, color.r, color.g, color.b)

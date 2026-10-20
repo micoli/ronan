@@ -1,6 +1,6 @@
 import type { Connection, ExperienceMap } from './types'
 
-export type PointStatus = 'visited' | 'reachable' | 'closed' | 'unreached'
+export type PointStatus = 'visited' | 'reachable' | 'closed' | 'unreached' | 'hidden' | 'passed'
 
 export type Journey = ReadonlySet<string>
 
@@ -10,7 +10,7 @@ export const isConnectionOpen = (connection: Connection, journey: Journey): bool
 const isConnectionRuledOut = (connection: Connection, journey: Journey): boolean =>
   connection.unless.some((id) => journey.has(id))
 
-export const reachablePoints = (map: ExperienceMap, journey: Journey): Set<string> => {
+const connectedPoints = (map: ExperienceMap, journey: Journey): Set<string> => {
   const reachable = new Set<string>(map.start.filter((id) => !journey.has(id)))
   for (const id of journey) {
     for (const connection of map.points[id]?.connections ?? []) {
@@ -18,6 +18,20 @@ export const reachablePoints = (map: ExperienceMap, journey: Journey): Set<strin
     }
   }
   return reachable
+}
+
+const storyPoints = (map: ExperienceMap, journey: Journey): Set<string> => {
+  const tip = [...journey].at(-1)
+  if (tip === undefined) return new Set(map.start)
+  return new Set(openableConnections(map, tip, journey).map((connection) => connection.to).filter((id) => !journey.has(id)))
+}
+
+export const reachablePoints = (map: ExperienceMap, journey: Journey): Set<string> => {
+  if (map.settings.navigation === 'story') return storyPoints(map, journey)
+  const connected = connectedPoints(map, journey)
+  if (map.settings.navigation === 'connected') return connected
+  const closed = closedPoints(map, journey, connected)
+  return new Set(Object.keys(map.points).filter((id) => !journey.has(id) && !closed.has(id)))
 }
 
 const closedPoints = (map: ExperienceMap, journey: Journey, reachable: Set<string>): Set<string> => {

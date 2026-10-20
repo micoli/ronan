@@ -2,6 +2,7 @@
   "title": "Cartographie de test (30 points)",
   "settings": {
     "presentation": "full",
+    "navigation": "free",
     "unavailable": "dimmed"
   },
   "start": [

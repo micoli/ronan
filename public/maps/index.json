@@ -11,6 +11,12 @@
       "title": "Cartographie de test",
       "description": "30 points, 5 familles, charnières et conditions : toute la constellation visible.",
       "map": "test-30.json"
+    },
+    {
+      "id": "story-paths",
+      "title": "Chemins d'une histoire",
+      "description": "5 points de départ ; seules les destinations du dernier point sont visibles, l'histoire ne se réécrit pas.",
+      "map": "story-paths.json"
     }
   ]
 }

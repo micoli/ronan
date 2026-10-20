@@ -1,0 +1,400 @@
+{
+  "title": "Cartographie narrative (test)",
+  "settings": {
+    "presentation": "full",
+    "navigation": "story",
+    "unavailable": "hidden"
+  },
+  "start": [
+    "v1",
+    "l1",
+    "m1",
+    "n1",
+    "i1"
+  ],
+  "families": {
+    "voix": {
+      "label": "Voix",
+      "color": "#ffd166",
+      "shape": "globe"
+    },
+    "lieu": {
+      "label": "Lieux",
+      "color": "#4cc9f0",
+      "shape": "octahedron"
+    },
+    "machine": {
+      "label": "Machines",
+      "color": "#c77dff",
+      "shape": "cube"
+    },
+    "nature": {
+      "label": "Nature",
+      "color": "#80ed99",
+      "shape": "pyramid"
+    },
+    "intime": {
+      "label": "Intime",
+      "color": "#ff7b9c",
+      "shape": "polyhedron"
+    }
+  },
+  "points": {
+    "v1": {
+      "title": "Appel du phare",
+      "families": [
+        "voix"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "v2"
+        },
+        {
+          "to": "l2"
+        }
+      ],
+      "text": "Fragment de recherche — Appel du phare. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "l1": {
+      "title": "Gare désaffectée",
+      "families": [
+        "lieu"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "l2"
+        },
+        {
+          "to": "m2"
+        }
+      ],
+      "text": "Fragment de recherche — Gare désaffectée. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "m1": {
+      "title": "Signal radio",
+      "families": [
+        "machine"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "m2"
+        },
+        {
+          "to": "n2"
+        }
+      ],
+      "text": "Fragment de recherche — Signal radio. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "n1": {
+      "title": "Lisière",
+      "families": [
+        "nature"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "n2"
+        },
+        {
+          "to": "i2"
+        }
+      ],
+      "text": "Fragment de recherche — Lisière. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "i1": {
+      "title": "Lettre non envoyée",
+      "families": [
+        "intime"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "i2"
+        },
+        {
+          "to": "v2"
+        }
+      ],
+      "text": "Fragment de recherche — Lettre non envoyée. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "v2": {
+      "title": "Voix sur le quai",
+      "families": [
+        "voix"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "v3"
+        },
+        {
+          "to": "l3"
+        }
+      ],
+      "text": "Fragment de recherche — Voix sur le quai. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "l2": {
+      "title": "Salle des pas perdus",
+      "families": [
+        "lieu"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "l3"
+        },
+        {
+          "to": "m3"
+        }
+      ],
+      "text": "Fragment de recherche — Salle des pas perdus. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "m2": {
+      "title": "Relais abandonné",
+      "families": [
+        "machine"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "m3"
+        },
+        {
+          "to": "n3"
+        }
+      ],
+      "text": "Fragment de recherche — Relais abandonné. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "n2": {
+      "title": "Clairière sourde",
+      "families": [
+        "nature"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "n3"
+        },
+        {
+          "to": "i3"
+        }
+      ],
+      "text": "Fragment de recherche — Clairière sourde. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "i2": {
+      "title": "Souvenir d'enfance",
+      "families": [
+        "intime"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "i3"
+        },
+        {
+          "to": "v3"
+        }
+      ],
+      "text": "Fragment de recherche — Souvenir d'enfance. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "v3": {
+      "title": "Chœur lointain",
+      "families": [
+        "voix"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "e1"
+        },
+        {
+          "to": "e2"
+        }
+      ],
+      "text": "Fragment de recherche — Chœur lointain. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "l3": {
+      "title": "Voie sans train",
+      "families": [
+        "lieu"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "e2"
+        },
+        {
+          "to": "e3"
+        }
+      ],
+      "text": "Fragment de recherche — Voie sans train. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "m3": {
+      "title": "Antenne brisée",
+      "families": [
+        "machine"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "e3"
+        },
+        {
+          "to": "e4"
+        }
+      ],
+      "text": "Fragment de recherche — Antenne brisée. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "n3": {
+      "title": "Sentier de brume",
+      "families": [
+        "nature"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [
+        {
+          "to": "e4"
+        },
+        {
+          "to": "e1"
+        }
+      ],
+      "text": "Fragment de recherche — Sentier de brume. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "i3": {
+      "title": "Porte entrouverte",
+      "families": [
+        "intime"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [
+        {
+          "to": "e1"
+        },
+        {
+          "to": "e4"
+        }
+      ],
+      "text": "Fragment de recherche — Porte entrouverte. Texte de test pour vérifier l'affichage du panneau."
+    },
+    "e1": {
+      "title": "Retour au phare",
+      "families": [
+        "voix"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [],
+      "text": "Fragment de recherche — Retour au phare. Texte de test pour vérifier l'affichage du panneau.",
+      "final": true
+    },
+    "e2": {
+      "title": "Dernier train",
+      "families": [
+        "lieu"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [],
+      "text": "Fragment de recherche — Dernier train. Texte de test pour vérifier l'affichage du panneau.",
+      "final": true
+    },
+    "e3": {
+      "title": "Fréquence éteinte",
+      "families": [
+        "machine"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/sets/soulhack"
+        }
+      ],
+      "connections": [],
+      "text": "Fragment de recherche — Fréquence éteinte. Texte de test pour vérifier l'affichage du panneau.",
+      "final": true
+    },
+    "e4": {
+      "title": "Forêt endormie",
+      "families": [
+        "nature"
+      ],
+      "capsules": [
+        {
+          "soundcloudUrl": "https://soundcloud.com/forss/flickermood"
+        }
+      ],
+      "connections": [],
+      "text": "Fragment de recherche — Forêt endormie. Texte de test pour vérifier l'affichage du panneau.",
+      "final": true
+    }
+  }
+}

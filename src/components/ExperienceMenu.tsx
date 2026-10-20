@@ -8,7 +8,7 @@ interface ExperienceMenuProps {
 export function ExperienceMenu({ experiences, onSelect }: ExperienceMenuProps) {
   return (
     <main className="screen">
-      <h1 className="title">RONAN</h1>
+      <h1 className="title">ORNAN</h1>
       <p className="mono-dim">Choisissez une expérience</p>
       <ul className="experience-list">
         {experiences.map((experience) => (

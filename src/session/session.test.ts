@@ -31,12 +31,14 @@ describe('session reducer', () => {
     expect(run(full, { type: 'open', pointId: 'a' }).currentPointId).toBe('a')
   })
 
-  it('records the journey as a set and remembers the previous point', () => {
-    const session = run(full, { type: 'open', pointId: 'a' }, { type: 'reveal' }, { type: 'open', pointId: 'b' }, { type: 'open', pointId: 'a' })
-    expect(session.journey).toEqual(['a', 'b'])
-    expect(session.currentPointId).toBe('a')
-    expect(session.previousPointId).toBe('b')
-    expect(session.pendingReveal).toBe(false)
+  it('only offers the chosen continuation when replaying a visited point', () => {
+    const afterB = run(full, { type: 'open', pointId: 'a' }, { type: 'reveal' }, { type: 'open', pointId: 'b' }, { type: 'reveal' })
+    expect(openablePointIds(full, afterB).has('c')).toBe(true)
+    const backOnA = createSessionReducer(full)(afterB, { type: 'open', pointId: 'a' })
+    expect(backOnA.pendingReveal).toBe(false)
+    expect([...openablePointIds(full, backOnA)]).toEqual(['b'])
+    expect(branchesOf(full, backOnA).map((branch) => branch.id)).toEqual(['b'])
+    expect(createSessionReducer(full)(backOnA, { type: 'open', pointId: 'c' })).toBe(backOnA)
   })
 
   it('holds back new reachability until the reveal', () => {
@@ -94,9 +96,45 @@ describe('saved session', () => {
   it('round-trips and rejects unknown points', () => {
     const session = run(full, { type: 'open', pointId: 'a' })
     const saved = toSaved(session)
-    expect(saved).toEqual({ currentPointId: 'a', previousPointId: null, journey: ['a'] })
+    expect(saved).toEqual({ currentPointId: 'a', journey: ['a'] })
     expect(isValidSaved(saved, full)).toBe(true)
-    expect(isValidSaved({ currentPointId: 'zzz', previousPointId: null, journey: [] }, full)).toBe(false)
+    expect(isValidSaved({ currentPointId: 'zzz', journey: [] }, full)).toBe(false)
     expect(toSaved(initialSession)).toBeNull()
+  })
+})
+
+describe('story navigation', () => {
+  const story = parseMap({
+    settings: { navigation: 'story' },
+    start: ['s1', 's2'],
+    points: {
+      s1: { title: 'S1', capsules: [{ soundcloudUrl: 'u' }], connections: [{ to: 'a' }, { to: 'b' }] },
+      s2: { title: 'S2', capsules: [{ soundcloudUrl: 'u' }], connections: [{ to: 'b' }] },
+      a: { title: 'A', capsules: [{ soundcloudUrl: 'u' }], connections: [] },
+      b: { title: 'B', capsules: [{ soundcloudUrl: 'u' }], connections: [] },
+    },
+  })
+  const reduce = createSessionReducer(story)
+
+  it('shows only the start points at first', () => {
+    expect(statusesOf(story, initialSession)).toEqual({ s1: 'reachable', s2: 'reachable', a: 'hidden', b: 'hidden' })
+  })
+
+  it('greys out the unchosen starts and withholds the destinations until the reveal', () => {
+    const opened = reduce(initialSession, { type: 'open', pointId: 's1' })
+    expect(statusesOf(story, opened)).toEqual({ s1: 'visited', s2: 'passed', a: 'hidden', b: 'hidden' })
+    const revealed = reduce(opened, { type: 'reveal' })
+    expect(statusesOf(story, revealed)).toEqual({ s1: 'visited', s2: 'passed', a: 'reachable', b: 'reachable' })
+  })
+
+  it('refuses to rewrite the story once a destination was chosen', () => {
+    const afterA = [{ type: 'open', pointId: 's1' }, { type: 'reveal' }, { type: 'open', pointId: 'a' }, { type: 'reveal' }].reduce(
+      (state, action) => reduce(state, action as never),
+      initialSession,
+    )
+    const back = reduce(afterA, { type: 'open', pointId: 's1' })
+    expect([...openablePointIds(story, back)]).toEqual(['a'])
+    expect(reduce(back, { type: 'open', pointId: 'b' })).toBe(back)
+    expect(statusesOf(story, back)).toMatchObject({ s1: 'visited', a: 'visited', b: 'passed', s2: 'passed' })
   })
 })

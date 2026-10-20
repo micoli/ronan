@@ -38,6 +38,7 @@ Une expérience est un unique fichier JSON (typiquement hébergé dans un gist o
 | --- | --- | --- | --- |
 | `title` | string | non | Titre de l'expérience |
 | `settings.presentation` | `"full"` \| `"local"` | non (`full`) | `full` : toute la carte visible. `local` : seulement le Point courant et ses Connections (histoire à choix). Une Map `local` n'a qu'un seul `start`. |
+| `settings.navigation` | `"connected"` \| `"free"` \| `"story"` | non (`connected`) | `connected` : seuls les Points reliés à un Point visité sont accessibles. `free` : tout Point non visité et non fermé (`unless`) est accessible, on peut sauter d'un Point à un autre. `story` : on part d'un des Points `start` (tous affichés), seules les destinations du dernier Point atteint sont visibles et choisissables ; le reste de la carte est caché. Le chemin parcouru peut être rejoué mais pas réécrit. |
 | `settings.unavailable` | `"dimmed"` \| `"hidden"` | non (`dimmed`) | Rendu des Points fermés |
 | `start` | string \| string[] | oui | Point(s) d'entrée accessibles au début |
 | `families` | objet | non | Table `id → { label, color (#rrggbb), shape }` ; `shape` ∈ `globe`, `octahedron`, `pyramid`, `cube`, `polyhedron` |

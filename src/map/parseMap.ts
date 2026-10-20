@@ -28,7 +28,7 @@ const isStringArray = (value: unknown): value is string[] =>
   Array.isArray(value) && value.every((item) => typeof item === 'string')
 
 const parseSettings = (raw: unknown, issues: string[]): MapSettings => {
-  const settings: MapSettings = { presentation: 'full', unavailable: 'dimmed' }
+  const settings: MapSettings = { presentation: 'full', navigation: 'connected', unavailable: 'dimmed' }
   if (raw === undefined) return settings
   if (!isRecord(raw)) {
     issues.push('"settings" must be an object')
@@ -37,6 +37,10 @@ const parseSettings = (raw: unknown, issues: string[]): MapSettings => {
   if (raw.presentation !== undefined) {
     if (raw.presentation === 'local' || raw.presentation === 'full') settings.presentation = raw.presentation
     else issues.push('settings.presentation must be "local" or "full"')
+  }
+  if (raw.navigation !== undefined) {
+    if (raw.navigation === 'connected' || raw.navigation === 'free' || raw.navigation === 'story') settings.navigation = raw.navigation
+    else issues.push('settings.navigation must be "connected", "free" or "story"')
   }
   if (raw.unavailable !== undefined) {
     if (raw.unavailable === 'hidden' || raw.unavailable === 'dimmed') settings.unavailable = raw.unavailable
